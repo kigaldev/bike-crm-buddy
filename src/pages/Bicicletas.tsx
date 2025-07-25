@@ -1,17 +1,17 @@
-import { ClientesList } from "@/components/ClientesList";
+import { BicicletasList } from "@/components/BicicletasList";
 import { Navigation } from "@/components/Navigation";
 
-const Index = () => {
+const Bicicletas = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
       <div className="p-6">
         <div className="max-w-7xl mx-auto">
-          <ClientesList />
+          <BicicletasList />
         </div>
       </div>
     </div>
   );
 };
 
-export default Index;
+export default Bicicletas;

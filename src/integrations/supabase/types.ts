@@ -14,6 +14,59 @@ export type Database = {
   }
   public: {
     Tables: {
+      bicicletas: {
+        Row: {
+          alias: string
+          cliente_id: string
+          color: string | null
+          created_at: string
+          fecha_compra: string | null
+          id: string
+          marca: string
+          modelo: string
+          notas: string | null
+          numero_de_serie: string | null
+          tipo: string
+          updated_at: string
+        }
+        Insert: {
+          alias: string
+          cliente_id: string
+          color?: string | null
+          created_at?: string
+          fecha_compra?: string | null
+          id?: string
+          marca: string
+          modelo: string
+          notas?: string | null
+          numero_de_serie?: string | null
+          tipo: string
+          updated_at?: string
+        }
+        Update: {
+          alias?: string
+          cliente_id?: string
+          color?: string | null
+          created_at?: string
+          fecha_compra?: string | null
+          id?: string
+          marca?: string
+          modelo?: string
+          notas?: string | null
+          numero_de_serie?: string | null
+          tipo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bicicletas_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clientes: {
         Row: {
           apellidos: string

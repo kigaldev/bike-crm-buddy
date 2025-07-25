@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { MessageCircle, Settings, Bike, Edit2, Calendar, Mail, Phone, MapPin, FileText } from "lucide-react";
+import { ClienteBicicletas } from "./ClienteBicicletas";
 import { ClienteForm } from "./ClienteForm";
 
 interface Cliente {
@@ -38,7 +39,7 @@ export const ClienteDetail = ({ cliente, onClienteUpdated, onClose }: ClienteDet
   };
 
   const handleVerBicicletas = () => {
-    // Aquí se implementará la funcionalidad de ver bicicletas
+    // Esta funcionalidad ya está implementada en la vista
     console.log('Ver bicicletas de cliente:', cliente.id);
   };
 
@@ -142,31 +143,12 @@ export const ClienteDetail = ({ cliente, onClienteUpdated, onClose }: ClienteDet
           </CardContent>
         </Card>
 
+        {/* Bicicletas del cliente */}
+        <ClienteBicicletas 
+          clienteId={cliente.id} 
+          clienteNombre={`${cliente.nombre} ${cliente.apellidos}`}
+        />
         {/* Estadísticas (placeholder para futuras funcionalidades) */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Resumen</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-3 gap-4 text-center">
-              <div>
-                <Badge variant="secondary" className="w-full">
-                  0 Reparaciones
-                </Badge>
-              </div>
-              <div>
-                <Badge variant="secondary" className="w-full">
-                  0 Bicicletas
-                </Badge>
-              </div>
-              <div>
-                <Badge variant="secondary" className="w-full">
-                  Cliente Activo
-                </Badge>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </>
   );
