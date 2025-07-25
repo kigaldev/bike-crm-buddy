@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { MessageCircle, Wrench, Bike, Edit2, Calendar, Mail, Phone, MapPin, FileText } from "lucide-react";
+import { MessageCircle, Settings, Bike, Edit2, Calendar, Mail, Phone, MapPin, FileText } from "lucide-react";
 import { ClienteForm } from "./ClienteForm";
 
 interface Cliente {
@@ -125,7 +125,7 @@ export const ClienteDetail = ({ cliente, onClienteUpdated, onClose }: ClienteDet
           <CardContent>
             <div className="flex flex-wrap gap-3">
               <Button onClick={handleCrearReparacion} className="flex items-center">
-                <Wrench className="w-4 h-4 mr-2" />
+                <Settings className="w-4 h-4 mr-2" />
                 Crear Reparación
               </Button>
               
