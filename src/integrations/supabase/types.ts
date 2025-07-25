@@ -106,6 +106,66 @@ export type Database = {
         }
         Relationships: []
       }
+      ordenes_reparacion: {
+        Row: {
+          bicicleta_id: string
+          cliente_id: string
+          costo_estimado: number | null
+          created_at: string
+          descripcion_trabajo: string | null
+          estado: string
+          fecha_entrada: string
+          fecha_estim_entrega: string | null
+          fotos_antes: string[] | null
+          fotos_despues: string[] | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          bicicleta_id: string
+          cliente_id: string
+          costo_estimado?: number | null
+          created_at?: string
+          descripcion_trabajo?: string | null
+          estado?: string
+          fecha_entrada?: string
+          fecha_estim_entrega?: string | null
+          fotos_antes?: string[] | null
+          fotos_despues?: string[] | null
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          bicicleta_id?: string
+          cliente_id?: string
+          costo_estimado?: number | null
+          created_at?: string
+          descripcion_trabajo?: string | null
+          estado?: string
+          fecha_entrada?: string
+          fecha_estim_entrega?: string | null
+          fotos_antes?: string[] | null
+          fotos_despues?: string[] | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ordenes_reparacion_bicicleta_id_fkey"
+            columns: ["bicicleta_id"]
+            isOneToOne: false
+            referencedRelation: "bicicletas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ordenes_reparacion_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

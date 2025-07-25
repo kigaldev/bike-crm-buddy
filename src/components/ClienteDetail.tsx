@@ -3,9 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { MessageCircle, Settings, Bike, Edit2, Calendar, Mail, Phone, MapPin, FileText } from "lucide-react";
 import { ClienteBicicletas } from "./ClienteBicicletas";
 import { ClienteForm } from "./ClienteForm";
+import { OrdenReparacionForm } from "./OrdenReparacionForm";
 
 interface Cliente {
   id: string;
@@ -26,6 +28,7 @@ interface ClienteDetailProps {
 
 export const ClienteDetail = ({ cliente, onClienteUpdated, onClose }: ClienteDetailProps) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [showOrdenForm, setShowOrdenForm] = useState(false);
 
   const handleWhatsApp = () => {
     const cleanPhone = cliente.telefono.replace(/\D/g, '');
@@ -34,8 +37,7 @@ export const ClienteDetail = ({ cliente, onClienteUpdated, onClose }: ClienteDet
   };
 
   const handleCrearReparacion = () => {
-    // Aquí se implementará la funcionalidad de crear reparación
-    console.log('Crear reparación para cliente:', cliente.id);
+    setShowOrdenForm(true);
   };
 
   const handleVerBicicletas = () => {
@@ -148,8 +150,18 @@ export const ClienteDetail = ({ cliente, onClienteUpdated, onClose }: ClienteDet
           clienteId={cliente.id} 
           clienteNombre={`${cliente.nombre} ${cliente.apellidos}`}
         />
-        {/* Estadísticas (placeholder para futuras funcionalidades) */}
       </div>
+
+      {/* Dialog para crear orden */}
+      <Dialog open={showOrdenForm} onOpenChange={setShowOrdenForm}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <OrdenReparacionForm
+            clienteId={cliente.id}
+            onOrdenCreated={() => setShowOrdenForm(false)}
+            onCancel={() => setShowOrdenForm(false)}
+          />
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

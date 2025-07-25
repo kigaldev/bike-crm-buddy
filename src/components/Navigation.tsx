@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Bike, Users } from "lucide-react";
+import { Bike, Users, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export const Navigation = () => {
@@ -23,6 +23,13 @@ export const Navigation = () => {
               <Button variant="ghost" className="flex items-center space-x-2">
                 <Bike className="w-4 h-4" />
                 <span>Bicicletas</span>
+              </Button>
+            </Link>
+            
+            <Link to="/ordenes">
+              <Button variant="ghost" className="flex items-center space-x-2">
+                <Calendar className="w-4 h-4" />
+                <span>Órdenes</span>
               </Button>
             </Link>
           </div>
