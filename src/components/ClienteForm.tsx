@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { logCliente } from "@/lib/logs";
 
 interface Cliente {
   id: string;
@@ -86,13 +87,19 @@ export const ClienteForm = ({ cliente, onClienteCreated, isEditing = false }: Cl
           .eq('id', cliente.id);
 
         if (error) throw error;
+
+        await logCliente.actualizar(cliente.id, `${formData.nombre} ${formData.apellidos}`);
       } else {
         // Crear nuevo cliente
-        const { error } = await supabase
+        const { data: newCliente, error } = await supabase
           .from('clientes')
-          .insert([formData]);
+          .insert([formData])
+          .select()
+          .single();
 
         if (error) throw error;
+
+        await logCliente.crear(newCliente.id, `${formData.nombre} ${formData.apellidos}`);
       }
 
       toast({

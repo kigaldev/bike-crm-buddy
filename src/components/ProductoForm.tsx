@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { logProducto } from "@/lib/logs";
 import { Upload, X, Package, Scan } from "lucide-react";
 
 type CategoriaProducto = 'Piezas' | 'Herramientas' | 'Lubricantes' | 'Neumaticos' | 'Accesorios' | 'Cables' | 'Frenos' | 'Cadenas' | 'Otros';
@@ -129,16 +130,22 @@ export function ProductoForm({ producto, onSuccess, onCancel }: ProductoFormProp
 
         if (error) throw error;
 
+        await logProducto.actualizar(producto.id, data.nombre);
+
         toast({
           title: "Producto actualizado",
           description: "El producto se actualizó correctamente.",
         });
       } else {
-        const { error } = await supabase
+        const { data: newProducto, error } = await supabase
           .from("productos_inventario")
-          .insert([productData]);
+          .insert([productData])
+          .select()
+          .single();
 
         if (error) throw error;
+
+        await logProducto.crear(newProducto.id, data.nombre);
 
         toast({
           title: "Producto creado",

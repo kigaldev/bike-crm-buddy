@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Bike, Users, Calendar, DollarSign, BarChart3, LogOut, Package } from "lucide-react";
+import { Bike, Users, Calendar, DollarSign, BarChart3, LogOut, Package, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -67,6 +67,15 @@ export const Navigation = () => {
                 <span>Facturas</span>
               </Button>
             </Link>
+            
+            {(profile?.role === 'admin' || profile?.role === 'auditor') && (
+              <Link to="/logs">
+                <Button variant="ghost" className="flex items-center space-x-2">
+                  <Shield className="w-4 h-4" />
+                  <span>Auditoría</span>
+                </Button>
+              </Link>
+            )}
             
             {profile && (
               <div className="flex items-center space-x-3 ml-4 pl-4 border-l">

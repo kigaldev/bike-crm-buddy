@@ -160,6 +160,45 @@ export type Database = {
           },
         ]
       }
+      logs: {
+        Row: {
+          created_at: string
+          descripcion: string
+          detalles_adicionales: Json | null
+          entidad_afectada: Database["public"]["Enums"]["entidad_tipo"]
+          fecha_hora: string
+          id: string
+          id_entidad: string | null
+          tipo_accion: Database["public"]["Enums"]["tipo_accion"]
+          usuario_email: string
+          usuario_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          descripcion: string
+          detalles_adicionales?: Json | null
+          entidad_afectada: Database["public"]["Enums"]["entidad_tipo"]
+          fecha_hora?: string
+          id?: string
+          id_entidad?: string | null
+          tipo_accion: Database["public"]["Enums"]["tipo_accion"]
+          usuario_email: string
+          usuario_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          descripcion?: string
+          detalles_adicionales?: Json | null
+          entidad_afectada?: Database["public"]["Enums"]["entidad_tipo"]
+          fecha_hora?: string
+          id?: string
+          id_entidad?: string | null
+          tipo_accion?: Database["public"]["Enums"]["tipo_accion"]
+          usuario_email?: string
+          usuario_id?: string | null
+        }
+        Relationships: []
+      }
       ordenes_reparacion: {
         Row: {
           bicicleta_id: string
@@ -310,6 +349,16 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: Database["public"]["Enums"]["app_role"]
       }
+      registrar_log: {
+        Args: {
+          p_tipo_accion: Database["public"]["Enums"]["tipo_accion"]
+          p_entidad_afectada: Database["public"]["Enums"]["entidad_tipo"]
+          p_id_entidad: string
+          p_descripcion: string
+          p_detalles_adicionales?: Json
+        }
+        Returns: string
+      }
     }
     Enums: {
       app_role: "admin" | "mecanico" | "recepcion" | "auditor"
@@ -323,6 +372,31 @@ export type Database = {
         | "Frenos"
         | "Cadenas"
         | "Otros"
+      entidad_tipo:
+        | "cliente"
+        | "bicicleta"
+        | "orden"
+        | "factura"
+        | "producto"
+        | "sistema"
+      tipo_accion:
+        | "CREAR_CLIENTE"
+        | "ACTUALIZAR_CLIENTE"
+        | "ELIMINAR_CLIENTE"
+        | "CREAR_BICICLETA"
+        | "ACTUALIZAR_BICICLETA"
+        | "ELIMINAR_BICICLETA"
+        | "CREAR_ORDEN"
+        | "ACTUALIZAR_ORDEN"
+        | "ELIMINAR_ORDEN"
+        | "CREAR_FACTURA"
+        | "ACTUALIZAR_FACTURA"
+        | "ELIMINAR_FACTURA"
+        | "CREAR_PRODUCTO"
+        | "ACTUALIZAR_PRODUCTO"
+        | "ELIMINAR_PRODUCTO"
+        | "LOGIN"
+        | "LOGOUT"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -461,6 +535,33 @@ export const Constants = {
         "Frenos",
         "Cadenas",
         "Otros",
+      ],
+      entidad_tipo: [
+        "cliente",
+        "bicicleta",
+        "orden",
+        "factura",
+        "producto",
+        "sistema",
+      ],
+      tipo_accion: [
+        "CREAR_CLIENTE",
+        "ACTUALIZAR_CLIENTE",
+        "ELIMINAR_CLIENTE",
+        "CREAR_BICICLETA",
+        "ACTUALIZAR_BICICLETA",
+        "ELIMINAR_BICICLETA",
+        "CREAR_ORDEN",
+        "ACTUALIZAR_ORDEN",
+        "ELIMINAR_ORDEN",
+        "CREAR_FACTURA",
+        "ACTUALIZAR_FACTURA",
+        "ELIMINAR_FACTURA",
+        "CREAR_PRODUCTO",
+        "ACTUALIZAR_PRODUCTO",
+        "ELIMINAR_PRODUCTO",
+        "LOGIN",
+        "LOGOUT",
       ],
     },
   },

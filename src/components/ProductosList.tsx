@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { AlertDialogConfirm } from "@/components/ui/alert-dialog-confirm";
+import { logProducto } from "@/lib/logs";
 import { Search, Plus, Edit, Trash2, Package, AlertTriangle, ScanLine } from "lucide-react";
 import { format } from "date-fns";
 
@@ -70,7 +71,7 @@ export function ProductosList({ onEdit, onNew }: ProductosListProps) {
     fetchProductos();
   }, []);
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string, nombre: string) => {
     try {
       const { error } = await supabase
         .from("productos_inventario")
@@ -78,6 +79,8 @@ export function ProductosList({ onEdit, onNew }: ProductosListProps) {
         .eq("id", id);
 
       if (error) throw error;
+
+      await logProducto.eliminar(id, nombre);
 
       toast({
         title: "Producto eliminado",
@@ -340,7 +343,7 @@ export function ProductosList({ onEdit, onNew }: ProductosListProps) {
                           <AlertDialogConfirm
                             title="Eliminar producto"
                             description={`¿Estás seguro de que quieres eliminar "${producto.nombre}"? Esta acción no se puede deshacer.`}
-                            onConfirm={() => handleDelete(producto.id)}
+                            onConfirm={() => handleDelete(producto.id, producto.nombre)}
                             trigger={
                               <Button variant="outline" size="sm">
                                 <Trash2 className="w-4 h-4" />

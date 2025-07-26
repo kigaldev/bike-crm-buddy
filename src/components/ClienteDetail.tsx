@@ -9,8 +9,10 @@ import { ClienteBicicletas } from "./ClienteBicicletas";
 import { ClienteForm } from "./ClienteForm";
 import { OrdenReparacionForm } from "./OrdenReparacionForm";
 import { ConfirmDeleteDialog } from "./ui/alert-dialog-confirm";
+import { ClienteHistorial } from "./ClienteHistorial";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { logCliente } from "@/lib/logs";
 
 interface Cliente {
   id: string;
@@ -66,6 +68,8 @@ export const ClienteDetail = ({ cliente, onClienteUpdated, onClienteDeleted, onC
         .eq('id', cliente.id);
 
       if (error) throw error;
+
+      await logCliente.eliminar(cliente.id, `${cliente.nombre} ${cliente.apellidos}`);
 
       toast({
         title: "Éxito",
@@ -196,10 +200,16 @@ export const ClienteDetail = ({ cliente, onClienteUpdated, onClienteDeleted, onC
         </Card>
 
         {/* Bicicletas del cliente */}
-        <ClienteBicicletas 
-          clienteId={cliente.id} 
-          clienteNombre={`${cliente.nombre} ${cliente.apellidos}`}
-        />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <ClienteBicicletas 
+            clienteId={cliente.id} 
+            clienteNombre={`${cliente.nombre} ${cliente.apellidos}`}
+          />
+          <ClienteHistorial 
+            clienteId={cliente.id} 
+            clienteNombre={`${cliente.nombre} ${cliente.apellidos}`}
+          />
+        </div>
       </div>
 
       {/* Dialog para crear orden */}

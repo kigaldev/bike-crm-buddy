@@ -11,6 +11,7 @@ import Inventario from "./pages/Inventario";
 import Facturas from "./pages/Facturas";
 import OrdenesReparacion from "./pages/OrdenesReparacion";
 import Dashboard from "./pages/Dashboard";
+import Logs from "./pages/Logs";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -78,6 +79,14 @@ function ProtectedApp() {
         element={
           <ProtectedRoute allowedRoles={['admin', 'recepcion']}>
             <Facturas />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/logs" 
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'auditor']}>
+            <Logs />
           </ProtectedRoute>
         } 
       />
