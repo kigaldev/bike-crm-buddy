@@ -12,6 +12,7 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { OrdenProductos } from "./OrdenProductos";
 
 interface OrdenReparacion {
   id?: string;
@@ -70,6 +71,7 @@ export const OrdenReparacionForm = ({
   const [bicicletas, setBicicletas] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [totalProductos, setTotalProductos] = useState(0);
 
   useEffect(() => {
     fetchClientes();
@@ -428,6 +430,16 @@ export const OrdenReparacionForm = ({
               </label>
             </div>
           </div>
+
+          {/* Productos y Servicios */}
+          {orden?.id && (
+            <div className="mt-6">
+              <OrdenProductos 
+                ordenId={orden.id} 
+                onTotalChange={setTotalProductos}
+              />
+            </div>
+          )}
 
           <div className="flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={onCancel}>

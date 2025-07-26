@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { OrdenProductos } from "./OrdenProductos";
 import { Download, MessageCircle, CheckCircle, FileText, X } from "lucide-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
@@ -279,6 +280,11 @@ export const FacturaDetail = ({ factura, onFacturaUpdated, onClose }: FacturaDet
               <p className="mt-1">{factura.ordenes_reparacion.descripcion_trabajo}</p>
             </div>
           )}
+          
+          {/* Productos y Servicios */}
+          <div className="mt-6">
+            <OrdenProductos ordenId={factura.id_orden} readonly />
+          </div>
         </CardContent>
       </Card>
 

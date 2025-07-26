@@ -5,7 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { OrdenReparacionForm } from "./OrdenReparacionForm";
-import { MessageCircle, Edit, Calendar, DollarSign, User, Bike, FileText } from "lucide-react";
+import { OrdenProductos } from "./OrdenProductos";
+import { FinalizarOrdenDialog } from "./FinalizarOrdenDialog";
+import { MessageCircle, Edit, Calendar, DollarSign, User, Bike, FileText, CheckCircle } from "lucide-react";
 import { format } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
 import { es } from "date-fns/locale";
@@ -19,6 +21,7 @@ interface OrdenReparacion {
   fecha_entrada: string;
   fecha_estim_entrega?: string;
   costo_estimado?: number;
+  total_productos?: number;
   fotos_antes?: string[];
   fotos_despues?: string[];
   created_at: string;
@@ -233,6 +236,11 @@ export const OrdenReparacionDetail = ({
 
         <Separator />
 
+        {/* Productos y Servicios */}
+        <OrdenProductos ordenId={orden.id} readonly />
+
+        <Separator />
+
         {/* Descripción del trabajo */}
         {orden.descripcion_trabajo && (
           <div>
@@ -348,6 +356,20 @@ export const OrdenReparacionDetail = ({
           </div>
           
           <div className="flex gap-2">
+            {orden.estado === 'En reparación' && (
+              <FinalizarOrdenDialog 
+                ordenId={orden.id} 
+                onFinalize={() => {
+                  // Recargar orden actualizada
+                  onOrdenUpdated?.({...orden, estado: 'Finalizado'});
+                }}
+              >
+                <Button size="sm">
+                  <CheckCircle className="w-4 h-4 mr-2" />
+                  Finalizar Orden
+                </Button>
+              </FinalizarOrdenDialog>
+            )}
             <Button onClick={() => setIsEditing(true)} variant="outline" size="sm">
               <Edit className="w-4 h-4 mr-2" />
               Editar

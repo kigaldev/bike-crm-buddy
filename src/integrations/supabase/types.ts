@@ -199,6 +199,63 @@ export type Database = {
         }
         Relationships: []
       }
+      orden_productos: {
+        Row: {
+          cantidad: number
+          created_at: string
+          es_inventariado: boolean
+          id: string
+          nombre: string
+          orden_id: string
+          precio_unitario: number
+          producto_inventario_id: string | null
+          subtotal: number | null
+          tipo: string
+          updated_at: string
+        }
+        Insert: {
+          cantidad: number
+          created_at?: string
+          es_inventariado?: boolean
+          id?: string
+          nombre: string
+          orden_id: string
+          precio_unitario: number
+          producto_inventario_id?: string | null
+          subtotal?: number | null
+          tipo: string
+          updated_at?: string
+        }
+        Update: {
+          cantidad?: number
+          created_at?: string
+          es_inventariado?: boolean
+          id?: string
+          nombre?: string
+          orden_id?: string
+          precio_unitario?: number
+          producto_inventario_id?: string | null
+          subtotal?: number | null
+          tipo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orden_productos_orden_id_fkey"
+            columns: ["orden_id"]
+            isOneToOne: false
+            referencedRelation: "ordenes_reparacion"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orden_productos_producto_inventario_id_fkey"
+            columns: ["producto_inventario_id"]
+            isOneToOne: false
+            referencedRelation: "productos_inventario"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ordenes_reparacion: {
         Row: {
           bicicleta_id: string
@@ -212,6 +269,7 @@ export type Database = {
           fotos_antes: string[] | null
           fotos_despues: string[] | null
           id: string
+          total_productos: number | null
           updated_at: string
         }
         Insert: {
@@ -226,6 +284,7 @@ export type Database = {
           fotos_antes?: string[] | null
           fotos_despues?: string[] | null
           id?: string
+          total_productos?: number | null
           updated_at?: string
         }
         Update: {
@@ -240,6 +299,7 @@ export type Database = {
           fotos_antes?: string[] | null
           fotos_despues?: string[] | null
           id?: string
+          total_productos?: number | null
           updated_at?: string
         }
         Relationships: [
@@ -342,6 +402,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      calcular_total_productos_orden: {
+        Args: { orden_id_param: string }
+        Returns: number
+      }
+      descontar_stock_orden: {
+        Args: { orden_id_param: string }
+        Returns: undefined
+      }
       promote_user_to_admin: {
         Args: { user_email: string; user_full_name: string }
         Returns: undefined
