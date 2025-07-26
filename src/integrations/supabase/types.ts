@@ -316,7 +316,6 @@ export type Database = {
           email: string
           full_name: string | null
           id: string
-          role: Database["public"]["Enums"]["app_role"]
           updated_at: string
           user_id: string
         }
@@ -325,7 +324,6 @@ export type Database = {
           email: string
           full_name?: string | null
           id?: string
-          role?: Database["public"]["Enums"]["app_role"]
           updated_at?: string
           user_id: string
         }
@@ -334,7 +332,6 @@ export type Database = {
           email?: string
           full_name?: string | null
           id?: string
-          role?: Database["public"]["Enums"]["app_role"]
           updated_at?: string
           user_id?: string
         }
@@ -345,10 +342,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      get_current_user_role: {
-        Args: Record<PropertyKey, never>
-        Returns: Database["public"]["Enums"]["app_role"]
-      }
       promote_user_to_admin: {
         Args: { user_email: string; user_full_name: string }
         Returns: undefined
@@ -365,7 +358,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "mecanico" | "recepcion" | "auditor"
+      app_role: "admin" | "tecnico" | "recepcion" | "auditor"
       categoria_producto:
         | "Piezas"
         | "Herramientas"
@@ -528,7 +521,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "mecanico", "recepcion", "auditor"],
+      app_role: ["admin", "tecnico", "recepcion", "auditor"],
       categoria_producto: [
         "Piezas",
         "Herramientas",
