@@ -1,8 +1,22 @@
 import { Button } from "@/components/ui/button";
-import { Bike, Users, Calendar, DollarSign, BarChart3 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Bike, Users, Calendar, DollarSign, BarChart3, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Navigation = () => {
+  const { profile, signOut } = useAuth();
+
+  const getRoleColor = (role: string) => {
+    switch (role) {
+      case 'admin': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
+      case 'mecanico': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
+      case 'recepcion': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+      case 'auditor': return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200';
+      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
+    }
+  };
+
   return (
     <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="max-w-7xl mx-auto px-6 py-4">
@@ -46,6 +60,20 @@ export const Navigation = () => {
                 <span>Facturas</span>
               </Button>
             </Link>
+            
+            {profile && (
+              <div className="flex items-center space-x-3 ml-4 pl-4 border-l">
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm text-muted-foreground">{profile.full_name || profile.email}</span>
+                  <Badge className={getRoleColor(profile.role)}>
+                    {profile.role}
+                  </Badge>
+                </div>
+                <Button variant="ghost" size="sm" onClick={signOut}>
+                  <LogOut className="w-4 h-4" />
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>

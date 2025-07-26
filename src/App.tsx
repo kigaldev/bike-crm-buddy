@@ -2,33 +2,95 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "@/hooks/useAuth";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Bicicletas from "./pages/Bicicletas";
 import Facturas from "./pages/Facturas";
 import OrdenesReparacion from "./pages/OrdenesReparacion";
 import Dashboard from "./pages/Dashboard";
+import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+function ProtectedApp() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  return (
+    <Routes>
+      <Route 
+        path="/" 
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'mecanico', 'recepcion']}>
+            <Index />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/dashboard" 
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'auditor']}>
+            <Dashboard />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/bicicletas" 
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'mecanico']}>
+            <Bicicletas />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/ordenes" 
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'mecanico', 'recepcion']}>
+            <OrdenesReparacion />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/facturas" 
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'recepcion']}>
+            <Facturas />
+          </ProtectedRoute>
+        } 
+      />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <BrowserRouter>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/bicicletas" element={<Bicicletas />} />
-          <Route path="/ordenes" element={<OrdenesReparacion />} />
-          <Route path="/facturas" element={<Facturas />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </TooltipProvider>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <Routes>
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/*" element={<ProtectedApp />} />
+          </Routes>
+        </TooltipProvider>
+      </BrowserRouter>
+    </AuthProvider>
   </QueryClientProvider>
 );
 
