@@ -349,6 +349,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: Database["public"]["Enums"]["app_role"]
       }
+      promote_user_to_admin: {
+        Args: { user_email: string; user_full_name: string }
+        Returns: undefined
+      }
       registrar_log: {
         Args: {
           p_tipo_accion: Database["public"]["Enums"]["tipo_accion"]
