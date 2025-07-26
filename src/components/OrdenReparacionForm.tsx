@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -71,12 +71,12 @@ export const OrdenReparacionForm = ({
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
 
-  useState(() => {
+  useEffect(() => {
     fetchClientes();
     if (formData.cliente_id) {
       fetchBicicletas(formData.cliente_id);
     }
-  });
+  }, [formData.cliente_id]);
 
   const fetchClientes = async () => {
     const { data, error } = await supabase

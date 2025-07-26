@@ -19,7 +19,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { format, startOfDay, endOfDay, startOfMonth, endOfMonth } from "date-fns";
 import { es } from "date-fns/locale";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
+// import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
 
 interface DashboardMetrics {
   ordenesActivas: number;
@@ -386,9 +386,8 @@ export const Dashboard = () => {
         </Card>
       </div>
 
-      {/* Charts */}
+      {/* Charts - Temporalmente deshabilitados */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Ingresos Chart */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -397,30 +396,16 @@ export const Dashboard = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={revenueData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="fecha" />
-                <YAxis />
-                <Tooltip 
-                  formatter={(value, name) => [
-                    name === 'ingresos' ? `$${value}` : value,
-                    name === 'ingresos' ? 'Ingresos' : 'Órdenes'
-                  ]}
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="ingresos" 
-                  stroke="#10b981" 
-                  strokeWidth={2}
-                  dot={{ fill: '#10b981' }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
+            <div className="h-[300px] flex items-center justify-center text-muted-foreground">
+              <div className="text-center">
+                <TrendingUp className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <p>Gráfico de ingresos</p>
+                <p className="text-sm">Próximamente disponible</p>
+              </div>
+            </div>
           </CardContent>
         </Card>
 
-        {/* Órdenes Chart */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -429,21 +414,13 @@ export const Dashboard = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={revenueData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="fecha" />
-                <YAxis />
-                <Tooltip 
-                  formatter={(value) => [value, 'Órdenes']}
-                />
-                <Bar 
-                  dataKey="ordenes" 
-                  fill="#3b82f6"
-                  radius={[4, 4, 0, 0]}
-                />
-              </BarChart>
-            </ResponsiveContainer>
+            <div className="h-[300px] flex items-center justify-center text-muted-foreground">
+              <div className="text-center">
+                <Activity className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <p>Gráfico de órdenes</p>
+                <p className="text-sm">Próximamente disponible</p>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
