@@ -23,6 +23,21 @@ interface Factura {
   total: number;
   metodo_pago?: string;
   archivo_pdf?: string;
+  numero_factura?: string;
+  serie_factura?: string;
+  ejercicio_fiscal?: number;
+  base_imponible?: number;
+  tipo_iva?: number;
+  cuota_iva?: number;
+  hash_anterior?: string;
+  hash_actual?: string;
+  emisor_nombre?: string;
+  emisor_cif?: string;
+  emisor_direccion?: string;
+  cliente_nif?: string;
+  fecha_pago?: string;
+  es_rectificativa?: boolean;
+  observaciones?: string;
   created_at: string;
   updated_at: string;
   clientes?: {
@@ -49,7 +64,8 @@ const estadosPago = [
   { value: "todos", label: "Todos los estados" },
   { value: "pendiente", label: "Pendiente" },
   { value: "pagado", label: "Pagado" },
-  { value: "parcial", label: "Parcial" }
+  { value: "parcial", label: "Parcial" },
+  { value: "cancelado", label: "Cancelado" }
 ];
 
 const getEstadoBadgeVariant = (estado: string) => {
@@ -60,6 +76,8 @@ const getEstadoBadgeVariant = (estado: string) => {
       return "destructive";
     case "parcial":
       return "secondary";
+    case "cancelado":
+      return "outline";
     default:
       return "outline";
   }
@@ -69,7 +87,8 @@ const getEstadoLabel = (estado: string) => {
   const estadosMap = {
     "pendiente": "💰 Pendiente",
     "pagado": "✅ Pagado",
-    "parcial": "⚠️ Parcial"
+    "parcial": "⚠️ Parcial",
+    "cancelado": "❌ Cancelado"
   };
   return estadosMap[estado as keyof typeof estadosMap] || estado;
 };
@@ -308,6 +327,16 @@ export const FacturasList = () => {
                   >
                     <TableCell>
                       <div>
+                        <p className="font-medium text-sm">
+                          {factura.numero_factura || factura.id.slice(-8)}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Serie: {factura.serie_factura || '001'}
+                        </p>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div>
                         <p className="font-medium">
                           {factura.clientes?.nombre} {factura.clientes?.apellidos}
                         </p>
@@ -333,7 +362,15 @@ export const FacturasList = () => {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      {factura.metodo_pago || "-"}
+                      <div className="max-w-[120px]">
+                        {factura.hash_actual ? (
+                          <span className="text-xs font-mono bg-muted px-2 py-1 rounded">
+                            {factura.hash_actual.slice(0, 12)}...
+                          </span>
+                        ) : (
+                          <span className="text-xs text-muted-foreground">Sin hash</span>
+                        )}
+                      </div>
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>

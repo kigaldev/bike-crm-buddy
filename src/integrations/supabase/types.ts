@@ -109,41 +109,96 @@ export type Database = {
       facturas: {
         Row: {
           archivo_pdf: string | null
+          base_imponible: number | null
+          cliente_nif: string | null
           created_at: string
+          cuota_iva: number | null
+          ejercicio_fiscal: number | null
+          emisor_cif: string | null
+          emisor_direccion: string | null
+          emisor_nombre: string | null
+          es_rectificativa: boolean | null
           estado_pago: string
+          factura_origen_id: string | null
           fecha_emision: string
+          fecha_pago: string | null
+          hash_actual: string | null
+          hash_anterior: string | null
           id: string
           id_cliente: string
           id_orden: string
           metodo_pago: string | null
+          numero_factura: string | null
+          observaciones: string | null
+          serie_factura: string | null
+          tipo_iva: number | null
           total: number
           updated_at: string
         }
         Insert: {
           archivo_pdf?: string | null
+          base_imponible?: number | null
+          cliente_nif?: string | null
           created_at?: string
+          cuota_iva?: number | null
+          ejercicio_fiscal?: number | null
+          emisor_cif?: string | null
+          emisor_direccion?: string | null
+          emisor_nombre?: string | null
+          es_rectificativa?: boolean | null
           estado_pago?: string
+          factura_origen_id?: string | null
           fecha_emision?: string
+          fecha_pago?: string | null
+          hash_actual?: string | null
+          hash_anterior?: string | null
           id?: string
           id_cliente: string
           id_orden: string
           metodo_pago?: string | null
+          numero_factura?: string | null
+          observaciones?: string | null
+          serie_factura?: string | null
+          tipo_iva?: number | null
           total: number
           updated_at?: string
         }
         Update: {
           archivo_pdf?: string | null
+          base_imponible?: number | null
+          cliente_nif?: string | null
           created_at?: string
+          cuota_iva?: number | null
+          ejercicio_fiscal?: number | null
+          emisor_cif?: string | null
+          emisor_direccion?: string | null
+          emisor_nombre?: string | null
+          es_rectificativa?: boolean | null
           estado_pago?: string
+          factura_origen_id?: string | null
           fecha_emision?: string
+          fecha_pago?: string | null
+          hash_actual?: string | null
+          hash_anterior?: string | null
           id?: string
           id_cliente?: string
           id_orden?: string
           metodo_pago?: string | null
+          numero_factura?: string | null
+          observaciones?: string | null
+          serie_factura?: string | null
+          tipo_iva?: number | null
           total?: number
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "facturas_factura_origen_id_fkey"
+            columns: ["factura_origen_id"]
+            isOneToOne: false
+            referencedRelation: "facturas"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "facturas_id_cliente_fkey"
             columns: ["id_cliente"]
@@ -156,6 +211,47 @@ export type Database = {
             columns: ["id_orden"]
             isOneToOne: false
             referencedRelation: "ordenes_reparacion"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      facturas_log: {
+        Row: {
+          accion: string
+          created_at: string
+          datos_anteriores: Json | null
+          datos_nuevos: Json | null
+          factura_id: string
+          id: string
+          timestamp: string
+          usuario_id: string | null
+        }
+        Insert: {
+          accion: string
+          created_at?: string
+          datos_anteriores?: Json | null
+          datos_nuevos?: Json | null
+          factura_id: string
+          id?: string
+          timestamp?: string
+          usuario_id?: string | null
+        }
+        Update: {
+          accion?: string
+          created_at?: string
+          datos_anteriores?: Json | null
+          datos_nuevos?: Json | null
+          factura_id?: string
+          id?: string
+          timestamp?: string
+          usuario_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "facturas_log_factura_id_fkey"
+            columns: ["factura_id"]
+            isOneToOne: false
+            referencedRelation: "facturas"
             referencedColumns: ["id"]
           },
         ]
@@ -402,6 +498,23 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      calcular_hash_verifactu: {
+        Args: {
+          p_numero_factura: string
+          p_fecha_emision: string
+          p_total: number
+          p_hash_anterior?: string
+        }
+        Returns: string
+      }
+      calcular_iva_factura: {
+        Args: { p_total_sin_iva: number; p_tipo_iva?: number }
+        Returns: {
+          base_imponible: number
+          cuota_iva: number
+          total_con_iva: number
+        }[]
+      }
       calcular_total_productos_orden: {
         Args: { orden_id_param: string }
         Returns: number
@@ -409,6 +522,14 @@ export type Database = {
       descontar_stock_orden: {
         Args: { orden_id_param: string }
         Returns: undefined
+      }
+      generar_json_verifactu: {
+        Args: { p_factura_id: string }
+        Returns: Json
+      }
+      generar_numero_factura_verifactu: {
+        Args: Record<PropertyKey, never>
+        Returns: string
       }
       promote_user_to_admin: {
         Args: { user_email: string; user_full_name: string }

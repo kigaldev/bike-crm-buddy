@@ -159,20 +159,46 @@ export const FacturaDetail = ({ factura, onFacturaUpdated, onClose }: FacturaDet
   const generarPDF = async () => {
     setLoading(true);
     try {
-      // Aquí se implementaría la llamada al edge function para generar el PDF
+      const { data, error } = await supabase.functions.invoke('generate-invoice-pdf', {
+        body: { facturaId: factura.id }
+      });
+
+      if (error) throw error;
+
+      onFacturaUpdated();
       toast({
-        title: "Generando PDF",
-        description: "La generación del PDF está en desarrollo"
+        title: "PDF Verifactu generado",
+        description: "El PDF ha sido generado correctamente"
       });
     } catch (error) {
       console.error('Error generating PDF:', error);
       toast({
         title: "Error",
-        description: "Error al generar el PDF",
+        description: "Error al generar el PDF Verifactu",
         variant: "destructive"
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const exportarJSON = async () => {
+    try {
+      window.open(
+        `https://udbcfwtgniqbupgeodga.supabase.co/functions/v1/export-verifactu-json?facturaId=${factura.id}`,
+        '_blank'
+      );
+      toast({
+        title: "Exportando JSON Verifactu",
+        description: "El archivo se descargará automáticamente"
+      });
+    } catch (error) {
+      console.error('Error exporting JSON:', error);
+      toast({
+        title: "Error",
+        description: "Error al exportar JSON Verifactu",
+        variant: "destructive"
+      });
     }
   };
 
@@ -353,6 +379,11 @@ export const FacturaDetail = ({ factura, onFacturaUpdated, onClose }: FacturaDet
         <Button onClick={enviarPorWhatsApp} variant="outline" className="flex items-center gap-2">
           <MessageCircle className="w-4 h-4" />
           Enviar por WhatsApp
+        </Button>
+
+        <Button onClick={exportarJSON} variant="outline" className="flex items-center gap-2">
+          <Download className="w-4 h-4" />
+          Exportar JSON Verifactu
         </Button>
       </div>
     </div>

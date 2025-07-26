@@ -1,6 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 
-// Función para generar una factura automáticamente cuando se finaliza una orden
+// Función para generar una factura automáticamente cuando se finaliza una orden (actualizada para Verifactu)
 export const generarFacturaAutomatica = async (ordenId: string) => {
   try {
     // Obtener datos de la orden y productos
@@ -23,19 +23,28 @@ export const generarFacturaAutomatica = async (ordenId: string) => {
 
     if (productosError) throw productosError;
 
-    // Calcular total (costo estimado + productos)
+    // Calcular totales con IVA para Verifactu
     const totalProductos = productos?.reduce((sum, p) => sum + p.subtotal, 0) || 0;
     const costoEstimado = orden.costo_estimado || 0;
-    const total = costoEstimado + totalProductos;
+    const totalSinIva = costoEstimado + totalProductos;
+    
+    // Calcular IVA (21%)
+    const baseImponible = totalSinIva;
+    const cuotaIva = Math.round(baseImponible * 0.21 * 100) / 100;
+    const totalConIva = baseImponible + cuotaIva;
 
-    // Crear factura
+    // Crear factura Verifactu - el trigger automáticamente genera número y hash
     const { data: factura, error: facturaError } = await supabase
       .from('facturas')
       .insert({
         id_orden: ordenId,
         id_cliente: orden.cliente_id,
-        total: total,
-        estado_pago: 'pendiente'
+        total: totalConIva,
+        base_imponible: baseImponible,
+        cuota_iva: cuotaIva,
+        tipo_iva: 21.00,
+        estado_pago: 'pendiente',
+        // Los campos numero_factura, hash_actual, etc. se generan automáticamente por el trigger
       })
       .select()
       .single();
