@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Bicicletas from "./pages/Bicicletas";
+import Inventario from "./pages/Inventario";
 import Facturas from "./pages/Facturas";
 import OrdenesReparacion from "./pages/OrdenesReparacion";
 import Dashboard from "./pages/Dashboard";
@@ -53,6 +54,14 @@ function ProtectedApp() {
         element={
           <ProtectedRoute allowedRoles={['admin', 'mecanico']}>
             <Bicicletas />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/inventario" 
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'recepcion']}>
+            <Inventario />
           </ProtectedRoute>
         } 
       />

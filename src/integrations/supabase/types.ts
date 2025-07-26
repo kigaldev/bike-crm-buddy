@@ -220,6 +220,57 @@ export type Database = {
           },
         ]
       }
+      productos_inventario: {
+        Row: {
+          cantidad_actual: number
+          cantidad_minima: number
+          categoria: Database["public"]["Enums"]["categoria_producto"]
+          codigo_barras: string | null
+          costo_unitario: number
+          created_at: string
+          fecha_actualizacion: string
+          id: string
+          imagen: string | null
+          margen: number
+          nombre: string
+          notas: string | null
+          proveedor: string | null
+          updated_at: string
+        }
+        Insert: {
+          cantidad_actual?: number
+          cantidad_minima?: number
+          categoria: Database["public"]["Enums"]["categoria_producto"]
+          codigo_barras?: string | null
+          costo_unitario?: number
+          created_at?: string
+          fecha_actualizacion?: string
+          id?: string
+          imagen?: string | null
+          margen?: number
+          nombre: string
+          notas?: string | null
+          proveedor?: string | null
+          updated_at?: string
+        }
+        Update: {
+          cantidad_actual?: number
+          cantidad_minima?: number
+          categoria?: Database["public"]["Enums"]["categoria_producto"]
+          codigo_barras?: string | null
+          costo_unitario?: number
+          created_at?: string
+          fecha_actualizacion?: string
+          id?: string
+          imagen?: string | null
+          margen?: number
+          nombre?: string
+          notas?: string | null
+          proveedor?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -262,6 +313,16 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "mecanico" | "recepcion" | "auditor"
+      categoria_producto:
+        | "Piezas"
+        | "Herramientas"
+        | "Lubricantes"
+        | "Neumaticos"
+        | "Accesorios"
+        | "Cables"
+        | "Frenos"
+        | "Cadenas"
+        | "Otros"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -390,6 +451,17 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "mecanico", "recepcion", "auditor"],
+      categoria_producto: [
+        "Piezas",
+        "Herramientas",
+        "Lubricantes",
+        "Neumaticos",
+        "Accesorios",
+        "Cables",
+        "Frenos",
+        "Cadenas",
+        "Otros",
+      ],
     },
   },
 } as const

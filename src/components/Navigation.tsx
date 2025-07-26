@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Bike, Users, Calendar, DollarSign, BarChart3, LogOut } from "lucide-react";
+import { Bike, Users, Calendar, DollarSign, BarChart3, LogOut, Package } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -44,6 +44,13 @@ export const Navigation = () => {
               <Button variant="ghost" className="flex items-center space-x-2">
                 <Bike className="w-4 h-4" />
                 <span>Bicicletas</span>
+              </Button>
+            </Link>
+            
+            <Link to="/inventario">
+              <Button variant="ghost" className="flex items-center space-x-2">
+                <Package className="w-4 h-4" />
+                <span>Inventario</span>
               </Button>
             </Link>
             
