@@ -114,10 +114,13 @@ export type Database = {
           created_at: string
           cuota_iva: number | null
           ejercicio_fiscal: number | null
+          email_enviado: boolean | null
+          email_fecha_envio: string | null
           emisor_cif: string | null
           emisor_direccion: string | null
           emisor_nombre: string | null
           es_rectificativa: boolean | null
+          estado_notificacion: string | null
           estado_pago: string
           factura_origen_id: string | null
           fecha_emision: string
@@ -127,13 +130,17 @@ export type Database = {
           id: string
           id_cliente: string
           id_orden: string
+          intentos_envio: number | null
           metodo_pago: string | null
           numero_factura: string | null
           observaciones: string | null
           serie_factura: string | null
           tipo_iva: number | null
           total: number
+          ultimo_error: string | null
           updated_at: string
+          whatsapp_enviado: boolean | null
+          whatsapp_fecha_envio: string | null
         }
         Insert: {
           archivo_pdf?: string | null
@@ -142,10 +149,13 @@ export type Database = {
           created_at?: string
           cuota_iva?: number | null
           ejercicio_fiscal?: number | null
+          email_enviado?: boolean | null
+          email_fecha_envio?: string | null
           emisor_cif?: string | null
           emisor_direccion?: string | null
           emisor_nombre?: string | null
           es_rectificativa?: boolean | null
+          estado_notificacion?: string | null
           estado_pago?: string
           factura_origen_id?: string | null
           fecha_emision?: string
@@ -155,13 +165,17 @@ export type Database = {
           id?: string
           id_cliente: string
           id_orden: string
+          intentos_envio?: number | null
           metodo_pago?: string | null
           numero_factura?: string | null
           observaciones?: string | null
           serie_factura?: string | null
           tipo_iva?: number | null
           total: number
+          ultimo_error?: string | null
           updated_at?: string
+          whatsapp_enviado?: boolean | null
+          whatsapp_fecha_envio?: string | null
         }
         Update: {
           archivo_pdf?: string | null
@@ -170,10 +184,13 @@ export type Database = {
           created_at?: string
           cuota_iva?: number | null
           ejercicio_fiscal?: number | null
+          email_enviado?: boolean | null
+          email_fecha_envio?: string | null
           emisor_cif?: string | null
           emisor_direccion?: string | null
           emisor_nombre?: string | null
           es_rectificativa?: boolean | null
+          estado_notificacion?: string | null
           estado_pago?: string
           factura_origen_id?: string | null
           fecha_emision?: string
@@ -183,13 +200,17 @@ export type Database = {
           id?: string
           id_cliente?: string
           id_orden?: string
+          intentos_envio?: number | null
           metodo_pago?: string | null
           numero_factura?: string | null
           observaciones?: string | null
           serie_factura?: string | null
           tipo_iva?: number | null
           total?: number
+          ultimo_error?: string | null
           updated_at?: string
+          whatsapp_enviado?: boolean | null
+          whatsapp_fecha_envio?: string | null
         }
         Relationships: [
           {
@@ -294,6 +315,50 @@ export type Database = {
           usuario_id?: string | null
         }
         Relationships: []
+      }
+      notificaciones_log: {
+        Row: {
+          created_at: string | null
+          destinatario: string
+          estado: string
+          factura_id: string
+          fecha_envio: string | null
+          id: string
+          mensaje_error: string | null
+          metadatos: Json | null
+          tipo_notificacion: string
+        }
+        Insert: {
+          created_at?: string | null
+          destinatario: string
+          estado: string
+          factura_id: string
+          fecha_envio?: string | null
+          id?: string
+          mensaje_error?: string | null
+          metadatos?: Json | null
+          tipo_notificacion: string
+        }
+        Update: {
+          created_at?: string | null
+          destinatario?: string
+          estado?: string
+          factura_id?: string
+          fecha_envio?: string | null
+          id?: string
+          mensaje_error?: string | null
+          metadatos?: Json | null
+          tipo_notificacion?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notificaciones_log_factura_id_fkey"
+            columns: ["factura_id"]
+            isOneToOne: false
+            referencedRelation: "facturas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       orden_productos: {
         Row: {
@@ -531,6 +596,18 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      obtener_datos_factura_notificacion: {
+        Args: { p_factura_id: string }
+        Returns: {
+          factura_numero: string
+          factura_total: number
+          cliente_nombre: string
+          cliente_email: string
+          cliente_telefono: string
+          archivo_pdf: string
+          bicicleta_info: string
+        }[]
+      }
       promote_user_to_admin: {
         Args: { user_email: string; user_full_name: string }
         Returns: undefined
@@ -542,6 +619,17 @@ export type Database = {
           p_id_entidad: string
           p_descripcion: string
           p_detalles_adicionales?: Json
+        }
+        Returns: string
+      }
+      registrar_notificacion: {
+        Args: {
+          p_factura_id: string
+          p_tipo: string
+          p_destinatario: string
+          p_estado: string
+          p_error?: string
+          p_metadatos?: Json
         }
         Returns: string
       }
