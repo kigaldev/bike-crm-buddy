@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { OrdenReparacionForm } from "./OrdenReparacionForm";
 import { MessageCircle, Edit, Calendar, DollarSign, User, Bike, FileText } from "lucide-react";
 import { format } from "date-fns";
+import { supabase } from "@/integrations/supabase/client";
 import { es } from "date-fns/locale";
 
 interface OrdenReparacion {
@@ -80,6 +81,31 @@ export const OrdenReparacionDetail = ({
   onClose
 }: OrdenReparacionDetailProps) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [factura, setFactura] = useState<any>(null);
+
+  useEffect(() => {
+    if (orden.estado === 'Finalizado') {
+      fetchFactura();
+    }
+  }, [orden.id, orden.estado]);
+
+  const fetchFactura = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('facturas')
+        .select('*')
+        .eq('id_orden', orden.id)
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error fetching factura:', error);
+      } else {
+        setFactura(data);
+      }
+    } catch (error) {
+      console.error('Error fetching factura:', error);
+    }
+  };
 
   const handleWhatsApp = () => {
     if (orden.clientes?.telefono) {
@@ -261,6 +287,53 @@ export const OrdenReparacionDetail = ({
               ))}
             </div>
           </div>
+        )}
+
+        {/* Información de Factura */}
+        {orden.estado === 'Finalizado' && factura && (
+          <>
+            <Separator />
+            <div>
+              <h3 className="font-medium mb-4 flex items-center gap-2">
+                <DollarSign className="w-4 h-4" />
+                Información de Factura
+              </h3>
+              <Card className="bg-muted/50">
+                <CardContent className="p-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Fecha de Emisión</p>
+                      <p className="font-medium">
+                        {format(new Date(factura.fecha_emision), "dd/MM/yyyy", { locale: es })}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Total</p>
+                      <p className="font-bold text-lg">${factura.total.toFixed(2)}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Estado de Pago</p>
+                      <Badge variant={factura.estado_pago === 'pagado' ? 'default' : 'destructive'}>
+                        {factura.estado_pago === 'pagado' ? '✅ Pagado' : '💰 Pendiente'}
+                      </Badge>
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        // Abrir página de facturas filtrada por esta factura
+                        window.open(`/facturas`, '_blank');
+                      }}
+                    >
+                      Ver Factura Completa
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </>
         )}
 
         <Separator />

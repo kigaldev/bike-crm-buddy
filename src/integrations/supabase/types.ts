@@ -106,6 +106,60 @@ export type Database = {
         }
         Relationships: []
       }
+      facturas: {
+        Row: {
+          archivo_pdf: string | null
+          created_at: string
+          estado_pago: string
+          fecha_emision: string
+          id: string
+          id_cliente: string
+          id_orden: string
+          metodo_pago: string | null
+          total: number
+          updated_at: string
+        }
+        Insert: {
+          archivo_pdf?: string | null
+          created_at?: string
+          estado_pago?: string
+          fecha_emision?: string
+          id?: string
+          id_cliente: string
+          id_orden: string
+          metodo_pago?: string | null
+          total: number
+          updated_at?: string
+        }
+        Update: {
+          archivo_pdf?: string | null
+          created_at?: string
+          estado_pago?: string
+          fecha_emision?: string
+          id?: string
+          id_cliente?: string
+          id_orden?: string
+          metodo_pago?: string | null
+          total?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "facturas_id_cliente_fkey"
+            columns: ["id_cliente"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "facturas_id_orden_fkey"
+            columns: ["id_orden"]
+            isOneToOne: false
+            referencedRelation: "ordenes_reparacion"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ordenes_reparacion: {
         Row: {
           bicicleta_id: string

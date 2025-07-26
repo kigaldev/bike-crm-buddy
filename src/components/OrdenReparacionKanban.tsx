@@ -95,6 +95,11 @@ export const OrdenReparacionKanban = () => {
 
       if (error) throw error;
 
+      // Si la orden se marca como Finalizada, crear factura automáticamente
+      if (nuevoEstado === 'Finalizado') {
+        await crearFacturaAutomatica(ordenId);
+      }
+
       // Actualizar el estado local
       setOrdenes(prev => 
         prev.map(orden => 
@@ -106,13 +111,61 @@ export const OrdenReparacionKanban = () => {
 
       toast({
         title: "Estado actualizado",
-        description: "El estado de la orden se ha actualizado correctamente"
+        description: nuevoEstado === 'Finalizado' 
+          ? "El estado se actualizó y se creó la factura automáticamente"
+          : "El estado de la orden se ha actualizado correctamente"
       });
     } catch (error) {
       console.error('Error updating orden estado:', error);
       toast({
         title: "Error",
         description: "Error al actualizar el estado de la orden",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const crearFacturaAutomatica = async (ordenId: string) => {
+    try {
+      // Obtener los datos completos de la orden
+      const { data: orden, error: ordenError } = await supabase
+        .from('ordenes_reparacion')
+        .select('*')
+        .eq('id', ordenId)
+        .single();
+
+      if (ordenError) throw ordenError;
+
+      // Verificar si ya existe una factura para esta orden
+      const { data: facturaExistente } = await supabase
+        .from('facturas')
+        .select('id')
+        .eq('id_orden', ordenId)
+        .single();
+
+      if (facturaExistente) {
+        console.log('La factura ya existe para esta orden');
+        return;
+      }
+
+      // Crear la factura
+      const { error: facturaError } = await supabase
+        .from('facturas')
+        .insert({
+          id_orden: orden.id,
+          id_cliente: orden.cliente_id,
+          total: orden.costo_estimado || 0,
+          estado_pago: 'pendiente'
+        });
+
+      if (facturaError) throw facturaError;
+
+      console.log('Factura creada automáticamente');
+    } catch (error) {
+      console.error('Error creating automatic factura:', error);
+      toast({
+        title: "Advertencia",
+        description: "La orden se finalizó pero hubo un error al crear la factura",
         variant: "destructive"
       });
     }
