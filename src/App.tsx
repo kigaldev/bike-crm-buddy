@@ -18,87 +18,18 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+// AUTH DISABLED - TEMPORAL: Allow access to all routes without auth
 function ProtectedApp() {
-  const { user, loading } = useAuth();
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return <Navigate to="/auth" replace />;
-  }
-
   return (
     <Routes>
-      <Route 
-        path="/" 
-        element={
-          <ProtectedRoute allowedRoles={['admin', 'tecnico', 'recepcion']}>
-            <Index />
-          </ProtectedRoute>
-        } 
-      />
-      <Route 
-        path="/dashboard" 
-        element={
-          <ProtectedRoute allowedRoles={['admin', 'auditor']}>
-            <Dashboard />
-          </ProtectedRoute>
-        } 
-      />
-      <Route 
-        path="/bicicletas" 
-        element={
-          <ProtectedRoute allowedRoles={['admin', 'tecnico']}>
-            <Bicicletas />
-          </ProtectedRoute>
-        } 
-      />
-      <Route 
-        path="/inventario" 
-        element={
-          <ProtectedRoute allowedRoles={['admin', 'recepcion']}>
-            <Inventario />
-          </ProtectedRoute>
-        } 
-      />
-      <Route 
-        path="/ordenes" 
-        element={
-          <ProtectedRoute allowedRoles={['admin', 'tecnico', 'recepcion']}>
-            <OrdenesReparacion />
-          </ProtectedRoute>
-        } 
-      />
-      <Route 
-        path="/facturas" 
-        element={
-          <ProtectedRoute allowedRoles={['admin', 'recepcion']}>
-            <Facturas />
-          </ProtectedRoute>
-        } 
-      />
-      <Route 
-        path="/logs" 
-        element={
-          <ProtectedRoute allowedRoles={['admin', 'auditor']}>
-            <Logs />
-          </ProtectedRoute>
-        } 
-      />
-      <Route 
-        path="/analytics" 
-        element={
-          <ProtectedRoute allowedRoles={['admin', 'auditor']}>
-            <Analytics />
-          </ProtectedRoute>
-        } 
-      />
+      <Route path="/" element={<Index />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/bicicletas" element={<Bicicletas />} />
+      <Route path="/inventario" element={<Inventario />} />
+      <Route path="/ordenes" element={<OrdenesReparacion />} />
+      <Route path="/facturas" element={<Facturas />} />
+      <Route path="/logs" element={<Logs />} />
+      <Route path="/analytics" element={<Analytics />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

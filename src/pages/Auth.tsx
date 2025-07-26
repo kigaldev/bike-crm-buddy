@@ -18,10 +18,8 @@ export default function Auth() {
     fullName: '',
   });
 
-  // Redirect if already authenticated
-  if (user && !loading) {
-    return <Navigate to="/" replace />;
-  }
+  // AUTH DISABLED - TEMPORAL: Allow access to auth page
+  // Redirect disabled during development
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({
@@ -35,7 +33,8 @@ export default function Auth() {
     setIsLoading(true);
 
     try {
-      const { error } = await signIn(formData.email, formData.password);
+      // AUTH DISABLED - TEMPORAL: Mock successful login
+      const { error } = await signIn();
       
       if (error) {
         if (error.message.includes('Invalid login credentials')) {
@@ -74,7 +73,8 @@ export default function Auth() {
     setIsLoading(true);
 
     try {
-      const { error } = await signUp(formData.email, formData.password, formData.fullName);
+      // AUTH DISABLED - TEMPORAL: Mock successful signup
+      const { error } = await signUp();
       
       if (error) {
         if (error.message.includes('User already registered')) {

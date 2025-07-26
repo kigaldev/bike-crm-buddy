@@ -142,12 +142,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// AUTH DISABLED - TEMPORAL: Mock auth for development
 export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
+  return {
+    user: { email: 'admin@dev.local' },
+    session: { user: { email: 'admin@dev.local' } },
+    profile: { 
+      id: 'mock-id',
+      user_id: 'mock-user-id',
+      email: 'admin@dev.local', 
+      full_name: 'Admin Desarrollo',
+      role: 'admin' as UserRole,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    },
+    loading: false,
+    signIn: async () => ({ error: null }),
+    signUp: async () => ({ error: null }),
+    signOut: async () => {}
+  };
 }
 
 export function useCurrentUserRole(): UserRole | null {
