@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Bike, Users, Calendar, DollarSign, BarChart3, LogOut, Package, Shield } from "lucide-react";
+import { Bike, Users, Calendar, DollarSign, BarChart3, LogOut, Package, Shield, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -69,12 +69,20 @@ export const Navigation = () => {
             </Link>
             
             {(profile?.role === 'admin' || profile?.role === 'auditor') && (
-              <Link to="/logs">
-                <Button variant="ghost" className="flex items-center space-x-2">
-                  <Shield className="w-4 h-4" />
-                  <span>Auditoría</span>
-                </Button>
-              </Link>
+              <>
+                <Link to="/logs">
+                  <Button variant="ghost" className="flex items-center space-x-2">
+                    <Shield className="w-4 h-4" />
+                    <span>Auditoría</span>
+                  </Button>
+                </Link>
+                <Link to="/analytics">
+                  <Button variant="ghost" className="flex items-center space-x-2">
+                    <TrendingUp className="w-4 h-4" />
+                    <span>Analytics</span>
+                  </Button>
+                </Link>
+              </>
             )}
             
             {profile && (

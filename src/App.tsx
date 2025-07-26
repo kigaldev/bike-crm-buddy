@@ -12,6 +12,7 @@ import Facturas from "./pages/Facturas";
 import OrdenesReparacion from "./pages/OrdenesReparacion";
 import Dashboard from "./pages/Dashboard";
 import Logs from "./pages/Logs";
+import Analytics from "./pages/Analytics";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -87,6 +88,14 @@ function ProtectedApp() {
         element={
           <ProtectedRoute allowedRoles={['admin', 'auditor']}>
             <Logs />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/analytics" 
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'auditor']}>
+            <Analytics />
           </ProtectedRoute>
         } 
       />
