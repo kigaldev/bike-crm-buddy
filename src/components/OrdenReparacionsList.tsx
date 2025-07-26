@@ -40,7 +40,7 @@ interface OrdenReparacion {
 }
 
 const estadosOrden = [
-  { value: "", label: "Todos los estados" },
+  { value: "todos", label: "Todos los estados" },
   { value: "Recibido", label: "📥 Recibido" },
   { value: "Diagnóstico", label: "🔍 Diagnóstico" },
   { value: "En reparación", label: "⚙️ En reparación" },
@@ -150,7 +150,7 @@ export const OrdenReparacionsList = () => {
     }
 
     // Filtro por estado
-    if (estadoFilter) {
+    if (estadoFilter && estadoFilter !== "todos") {
       filtered = filtered.filter(orden => orden.estado === estadoFilter);
     }
 
