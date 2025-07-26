@@ -88,6 +88,25 @@ export const FacturaDetail = ({ factura, onFacturaUpdated, onClose }: FacturaDet
   const [metodoPago, setMetodoPago] = useState(factura.metodo_pago || "");
 
   const handleUpdateFactura = async () => {
+    // Validaciones
+    if (!estadoPago) {
+      toast({
+        title: "Error de validación",
+        description: "El estado de pago es obligatorio",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (estadoPago === "pagado" && !metodoPago) {
+      toast({
+        title: "Error de validación", 
+        description: "Debe seleccionar un método de pago cuando el estado es 'Pagado'",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
     try {
       const { error } = await supabase
@@ -102,8 +121,8 @@ export const FacturaDetail = ({ factura, onFacturaUpdated, onClose }: FacturaDet
 
       onFacturaUpdated();
       toast({
-        title: "Factura actualizada",
-        description: "Los datos de la factura se han actualizado correctamente"
+        title: "Éxito",
+        description: "Factura actualizada correctamente"
       });
     } catch (error) {
       console.error('Error updating factura:', error);
@@ -319,10 +338,10 @@ export const FacturaDetail = ({ factura, onFacturaUpdated, onClose }: FacturaDet
             Descargar PDF
           </Button>
         ) : (
-          <Button onClick={generarPDF} disabled={loading} className="flex items-center gap-2">
-            <FileText className="w-4 h-4" />
-            Generar PDF
-          </Button>
+        <Button onClick={generarPDF} disabled={loading} className="flex items-center gap-2">
+          <FileText className="w-4 h-4" />
+          {loading ? "Generando..." : "Generar PDF"}
+        </Button>
         )}
 
         <Button onClick={enviarPorWhatsApp} variant="outline" className="flex items-center gap-2">

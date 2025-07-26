@@ -19,7 +19,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { format, startOfDay, endOfDay, startOfMonth, endOfMonth } from "date-fns";
 import { es } from "date-fns/locale";
-// import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 
 interface DashboardMetrics {
   ordenesActivas: number;
@@ -386,7 +387,7 @@ export const Dashboard = () => {
         </Card>
       </div>
 
-      {/* Charts - Temporalmente deshabilitados */}
+      {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
@@ -396,12 +397,29 @@ export const Dashboard = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-[300px] flex items-center justify-center text-muted-foreground">
-              <div className="text-center">
-                <TrendingUp className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>Gráfico de ingresos</p>
-                <p className="text-sm">Próximamente disponible</p>
-              </div>
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={revenueData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="fecha" />
+                  <YAxis />
+                  <Tooltip 
+                    formatter={(value) => [`$${value}`, 'Ingresos']}
+                    labelStyle={{ color: 'hsl(var(--foreground))' }}
+                    contentStyle={{ 
+                      backgroundColor: 'hsl(var(--background))', 
+                      border: '1px solid hsl(var(--border))' 
+                    }}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="ingresos" 
+                    stroke="hsl(var(--primary))" 
+                    strokeWidth={2}
+                    dot={{ fill: 'hsl(var(--primary))' }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
@@ -414,12 +432,27 @@ export const Dashboard = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-[300px] flex items-center justify-center text-muted-foreground">
-              <div className="text-center">
-                <Activity className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>Gráfico de órdenes</p>
-                <p className="text-sm">Próximamente disponible</p>
-              </div>
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={revenueData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="fecha" />
+                  <YAxis />
+                  <Tooltip 
+                    formatter={(value) => [`${value}`, 'Órdenes']}
+                    labelStyle={{ color: 'hsl(var(--foreground))' }}
+                    contentStyle={{ 
+                      backgroundColor: 'hsl(var(--background))', 
+                      border: '1px solid hsl(var(--border))' 
+                    }}
+                  />
+                  <Bar 
+                    dataKey="ordenes" 
+                    fill="hsl(var(--primary))" 
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>

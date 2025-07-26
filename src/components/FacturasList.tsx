@@ -7,7 +7,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { FacturaDetail } from "./FacturaDetail";
-import { Search, Filter, DollarSign, Download, CheckCircle, MessageCircle } from "lucide-react";
+import { Search, Filter, DollarSign, Download, CheckCircle, MessageCircle, Trash2 } from "lucide-react";
+import { ConfirmDeleteDialog } from "./ui/alert-dialog-confirm";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { supabase } from "@/integrations/supabase/client";

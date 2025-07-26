@@ -67,6 +67,44 @@ export const BicicletaForm = ({ bicicleta, clienteId, onBicicletaCreated, isEdit
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validaciones
+    if (!formData.alias.trim()) {
+      toast({
+        title: "Error de validación",
+        description: "El alias es obligatorio",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!formData.marca.trim()) {
+      toast({
+        title: "Error de validación",
+        description: "La marca es obligatoria",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!formData.modelo.trim()) {
+      toast({
+        title: "Error de validación",
+        description: "El modelo es obligatorio",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!formData.tipo) {
+      toast({
+        title: "Error de validación",
+        description: "El tipo es obligatorio",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -91,6 +129,10 @@ export const BicicletaForm = ({ bicicleta, clienteId, onBicicletaCreated, isEdit
         if (error) throw error;
       }
 
+      toast({
+        title: "Éxito",
+        description: `Bicicleta ${isEditing ? 'actualizada' : 'creada'} correctamente`,
+      });
       onBicicletaCreated();
     } catch (error) {
       console.error('Error saving bicicleta:', error);

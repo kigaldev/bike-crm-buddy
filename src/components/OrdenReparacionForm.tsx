@@ -154,6 +154,44 @@ export const OrdenReparacionForm = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validaciones
+    if (!formData.cliente_id) {
+      toast({
+        title: "Error de validación",
+        description: "Debes seleccionar un cliente",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!formData.bicicleta_id) {
+      toast({
+        title: "Error de validación", 
+        description: "Debes seleccionar una bicicleta",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!formData.descripcion_trabajo?.trim()) {
+      toast({
+        title: "Error de validación",
+        description: "La descripción del trabajo es obligatoria",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (formData.costo_estimado < 0) {
+      toast({
+        title: "Error de validación",
+        description: "El costo estimado no puede ser negativo",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -181,8 +219,8 @@ export const OrdenReparacionForm = ({
 
         onOrdenUpdated?.(data);
         toast({
-          title: "Orden actualizada",
-          description: "La orden de reparación se ha actualizado correctamente"
+          title: "Éxito",
+          description: "Orden de reparación actualizada correctamente"
         });
       } else {
         const { data, error } = await supabase
@@ -195,8 +233,8 @@ export const OrdenReparacionForm = ({
 
         onOrdenCreated?.(data);
         toast({
-          title: "Orden creada",
-          description: "La orden de reparación se ha creado correctamente"
+          title: "Éxito",
+          description: "Orden de reparación creada correctamente"
         });
       }
     } catch (error) {
@@ -317,16 +355,17 @@ export const OrdenReparacionForm = ({
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="descripcion_trabajo">Descripción del Trabajo</Label>
-            <Textarea
-              id="descripcion_trabajo"
-              value={formData.descripcion_trabajo}
-              onChange={(e) => setFormData(prev => ({ ...prev, descripcion_trabajo: e.target.value }))}
-              placeholder="Describe el trabajo a realizar..."
-              rows={4}
-            />
-          </div>
+            <div className="space-y-2">
+              <Label htmlFor="descripcion_trabajo">Descripción del Trabajo *</Label>
+              <Textarea
+                id="descripcion_trabajo"
+                value={formData.descripcion_trabajo}
+                onChange={(e) => setFormData(prev => ({ ...prev, descripcion_trabajo: e.target.value }))}
+                placeholder="Describe el trabajo a realizar..."
+                rows={4}
+                required
+              />
+            </div>
 
           {/* Fotos Antes */}
           <div className="space-y-2">

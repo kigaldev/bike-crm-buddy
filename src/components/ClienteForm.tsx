@@ -35,6 +35,16 @@ export const ClienteForm = ({ cliente, onClienteCreated, isEditing = false }: Cl
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePhone = (phone: string) => {
+    const phoneRegex = /^\d{9}$/;
+    return phoneRegex.test(phone);
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -45,6 +55,26 @@ export const ClienteForm = ({ cliente, onClienteCreated, isEditing = false }: Cl
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validaciones
+    if (!validateEmail(formData.email)) {
+      toast({
+        title: "Error de validación",
+        description: "Por favor, introduce un email válido",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!validatePhone(formData.telefono)) {
+      toast({
+        title: "Error de validación", 
+        description: "El teléfono debe tener exactamente 9 dígitos numéricos",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -65,6 +95,10 @@ export const ClienteForm = ({ cliente, onClienteCreated, isEditing = false }: Cl
         if (error) throw error;
       }
 
+      toast({
+        title: "Éxito",
+        description: `Cliente ${isEditing ? 'actualizado' : 'creado'} correctamente`,
+      });
       onClienteCreated();
     } catch (error) {
       console.error('Error saving cliente:', error);

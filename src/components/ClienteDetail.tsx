@@ -4,10 +4,13 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { MessageCircle, Settings, Bike, Edit2, Calendar, Mail, Phone, MapPin, FileText } from "lucide-react";
+import { MessageCircle, Settings, Bike, Edit2, Calendar, Mail, Phone, MapPin, FileText, Trash2 } from "lucide-react";
 import { ClienteBicicletas } from "./ClienteBicicletas";
 import { ClienteForm } from "./ClienteForm";
 import { OrdenReparacionForm } from "./OrdenReparacionForm";
+import { ConfirmDeleteDialog } from "./ui/alert-dialog-confirm";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface Cliente {
   id: string;
@@ -23,12 +26,16 @@ interface Cliente {
 interface ClienteDetailProps {
   cliente: Cliente;
   onClienteUpdated: () => void;
+  onClienteDeleted?: () => void;
   onClose: () => void;
 }
 
-export const ClienteDetail = ({ cliente, onClienteUpdated, onClose }: ClienteDetailProps) => {
+export const ClienteDetail = ({ cliente, onClienteUpdated, onClienteDeleted, onClose }: ClienteDetailProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [showOrdenForm, setShowOrdenForm] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const { toast } = useToast();
 
   const handleWhatsApp = () => {
     const cleanPhone = cliente.telefono.replace(/\D/g, '');
@@ -48,6 +55,36 @@ export const ClienteDetail = ({ cliente, onClienteUpdated, onClose }: ClienteDet
   const handleClienteUpdated = () => {
     setIsEditing(false);
     onClienteUpdated();
+  };
+
+  const handleDeleteCliente = async () => {
+    setDeleteLoading(true);
+    try {
+      const { error } = await supabase
+        .from('clientes')
+        .delete()
+        .eq('id', cliente.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Éxito",
+        description: "Cliente eliminado correctamente",
+      });
+      
+      onClienteDeleted?.();
+      onClose();
+    } catch (error) {
+      console.error('Error deleting cliente:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo eliminar el cliente",
+        variant: "destructive",
+      });
+    } finally {
+      setDeleteLoading(false);
+      setShowDeleteDialog(false);
+    }
   };
 
   if (isEditing) {
@@ -70,10 +107,23 @@ export const ClienteDetail = ({ cliente, onClienteUpdated, onClose }: ClienteDet
       <DialogHeader>
         <DialogTitle className="flex items-center justify-between">
           <span>Ficha del Cliente</span>
-          <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
-            <Edit2 className="w-4 h-4 mr-2" />
-            Editar
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
+              <Edit2 className="w-4 h-4 mr-2" />
+              Editar
+            </Button>
+            {onClienteDeleted && (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setShowDeleteDialog(true)}
+                className="text-destructive hover:text-destructive"
+              >
+                <Trash2 className="w-4 h-4 mr-2" />
+                Eliminar
+              </Button>
+            )}
+          </div>
         </DialogTitle>
       </DialogHeader>
 
@@ -162,6 +212,16 @@ export const ClienteDetail = ({ cliente, onClienteUpdated, onClose }: ClienteDet
           />
         </DialogContent>
       </Dialog>
+
+      {/* Dialog de confirmación de eliminación */}
+      <ConfirmDeleteDialog
+        open={showDeleteDialog}
+        onOpenChange={setShowDeleteDialog}
+        onConfirm={handleDeleteCliente}
+        title="Eliminar Cliente"
+        description={`¿Estás seguro de que quieres eliminar a ${cliente.nombre} ${cliente.apellidos}? Esta acción no se puede deshacer y eliminará también todas sus bicicletas y órdenes.`}
+        loading={deleteLoading}
+      />
     </>
   );
 };

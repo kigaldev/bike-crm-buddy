@@ -186,6 +186,10 @@ export const ClientesList = () => {
             <ClienteDetail
               cliente={selectedCliente}
               onClienteUpdated={handleClienteUpdated}
+              onClienteDeleted={() => {
+                fetchClientes();
+                setIsDetailOpen(false);
+              }}
               onClose={() => setIsDetailOpen(false)}
             />
           )}
