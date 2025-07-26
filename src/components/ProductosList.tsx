@@ -69,6 +69,13 @@ export function ProductosList({ onEdit, onNew }: ProductosListProps) {
 
   useEffect(() => {
     fetchProductos();
+    
+    // Si hay parámetros de URL, aplicar filtros
+    const urlParams = new URLSearchParams(window.location.search);
+    const stockParam = urlParams.get('stock');
+    if (stockParam === 'bajo') {
+      setStockFilter('bajo');
+    }
   }, []);
 
   const handleDelete = async (id: string, nombre: string) => {

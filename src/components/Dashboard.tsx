@@ -12,7 +12,9 @@ import {
   Clock,
   CheckCircle,
   AlertCircle,
-  Activity
+  Activity,
+  Package,
+  AlertTriangle
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -21,6 +23,7 @@ import { format, startOfDay, endOfDay, startOfMonth, endOfMonth } from "date-fns
 import { es } from "date-fns/locale";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { StockAlerts } from "@/components/StockAlerts";
 
 interface DashboardMetrics {
   ordenesActivas: number;
@@ -31,6 +34,10 @@ interface DashboardMetrics {
   facturasPendientes: number;
   totalClientes: number;
   totalOrdenes: number;
+  // Nuevos KPIs de inventario
+  productosStockBajo: number;
+  valorTotalInventario: number;
+  totalProductos: number;
 }
 
 interface RevenueData {
@@ -50,6 +57,10 @@ export const Dashboard = () => {
     facturasPendientes: 0,
     totalClientes: 0,
     totalOrdenes: 0,
+    // Nuevos KPIs de inventario
+    productosStockBajo: 0,
+    valorTotalInventario: 0,
+    totalProductos: 0,
   });
   const [revenueData, setRevenueData] = useState<RevenueData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -65,6 +76,7 @@ export const Dashboard = () => {
         fetchOrderMetrics(),
         fetchInvoiceMetrics(),
         fetchGeneralMetrics(),
+        fetchInventoryMetrics(), // Nueva función para inventario
         fetchRevenueChart()
       ]);
     } catch (error) {
@@ -167,6 +179,33 @@ export const Dashboard = () => {
     }));
   };
 
+  // Nueva función para métricas de inventario
+  const fetchInventoryMetrics = async () => {
+    // Obtener todos los productos
+    const { data: productos } = await supabase
+      .from('productos_inventario')
+      .select('cantidad_actual, cantidad_minima, costo_unitario');
+
+    if (productos) {
+      // Productos con stock bajo
+      const productosStockBajo = productos.filter(p => 
+        p.cantidad_actual <= p.cantidad_minima
+      ).length;
+
+      // Valor total del inventario
+      const valorTotalInventario = productos.reduce((total, producto) => 
+        total + (producto.cantidad_actual * producto.costo_unitario), 0
+      );
+
+      setMetrics(prev => ({
+        ...prev,
+        productosStockBajo,
+        valorTotalInventario,
+        totalProductos: productos.length,
+      }));
+    }
+  };
+
   const fetchRevenueChart = async () => {
     // Obtener datos de los últimos 7 días para el gráfico
     const last7Days = Array.from({ length: 7 }, (_, i) => {
@@ -267,9 +306,9 @@ export const Dashboard = () => {
               </Link>
             </Button>
             <Button asChild variant="outline" className="h-20 flex-col gap-2">
-              <Link to="/ordenes?vista=kanban">
-                <Activity className="w-6 h-6" />
-                Vista Kanban
+              <Link to="/inventario">
+                <Package className="w-6 h-6" />
+                Gestionar Inventario
               </Link>
             </Button>
           </div>
@@ -386,6 +425,79 @@ export const Dashboard = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Inventory KPIs - Nueva sección */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Productos con Stock Bajo</CardTitle>
+            <AlertTriangle className="h-4 w-4 text-orange-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-orange-600">
+              {metrics.productosStockBajo}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Requieren reposición
+            </p>
+            {metrics.productosStockBajo > 0 && (
+              <Button asChild variant="outline" size="sm" className="mt-2">
+                <Link to="/inventario?stock=bajo">
+                  <AlertTriangle className="w-3 h-3 mr-1" />
+                  Ver productos
+                </Link>
+              </Button>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Valor Total Inventario</CardTitle>
+            <Package className="h-4 w-4 text-blue-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-blue-600">
+              €{metrics.valorTotalInventario.toFixed(0)}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Inversión total en stock
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Productos</CardTitle>
+            <Package className="h-4 w-4 text-green-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-600">
+              {metrics.totalProductos}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Artículos en catálogo
+            </p>
+            <Button asChild variant="outline" size="sm" className="mt-2">
+              <Link to="/inventario">
+                <Package className="w-3 h-3 mr-1" />
+                Gestionar inventario
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Stock Alerts Section - Nueva sección */}
+      {metrics.productosStockBajo > 0 && (
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold flex items-center gap-2">
+            <AlertTriangle className="w-5 h-5 text-orange-500" />
+            Alertas de Stock Bajo
+          </h2>
+          <StockAlerts showActions={true} maxItems={5} />
+        </div>
+      )}
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

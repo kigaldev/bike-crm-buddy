@@ -8,6 +8,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Bicicletas from "./pages/Bicicletas";
 import Inventario from "./pages/Inventario";
+import AlertasStock from "./pages/AlertasStock";
 import Facturas from "./pages/Facturas";
 import OrdenesReparacion from "./pages/OrdenesReparacion";
 import Dashboard from "./pages/Dashboard";
@@ -26,6 +27,7 @@ function ProtectedApp() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/bicicletas" element={<Bicicletas />} />
       <Route path="/inventario" element={<Inventario />} />
+      <Route path="/alertas-stock" element={<AlertasStock />} />
       <Route path="/ordenes" element={<OrdenesReparacion />} />
       <Route path="/facturas" element={<Facturas />} />
       <Route path="/logs" element={<Logs />} />
