@@ -14,6 +14,127 @@ export type Database = {
   }
   public: {
     Tables: {
+      abonos: {
+        Row: {
+          archivo_pdf: string | null
+          archivo_xml: string | null
+          creado_por: string | null
+          created_at: string | null
+          ejercicio_fiscal: number | null
+          estado: string | null
+          factura_original_id: string | null
+          fecha_abono: string | null
+          hash_actual: string | null
+          hash_anterior: string | null
+          id: string
+          metodo_pago: string | null
+          monto: number
+          motivo: string | null
+          numero_abono: string | null
+          observaciones: string | null
+          referencia: string | null
+          serie_abono: string | null
+          tipo: string
+          updated_at: string | null
+        }
+        Insert: {
+          archivo_pdf?: string | null
+          archivo_xml?: string | null
+          creado_por?: string | null
+          created_at?: string | null
+          ejercicio_fiscal?: number | null
+          estado?: string | null
+          factura_original_id?: string | null
+          fecha_abono?: string | null
+          hash_actual?: string | null
+          hash_anterior?: string | null
+          id?: string
+          metodo_pago?: string | null
+          monto: number
+          motivo?: string | null
+          numero_abono?: string | null
+          observaciones?: string | null
+          referencia?: string | null
+          serie_abono?: string | null
+          tipo: string
+          updated_at?: string | null
+        }
+        Update: {
+          archivo_pdf?: string | null
+          archivo_xml?: string | null
+          creado_por?: string | null
+          created_at?: string | null
+          ejercicio_fiscal?: number | null
+          estado?: string | null
+          factura_original_id?: string | null
+          fecha_abono?: string | null
+          hash_actual?: string | null
+          hash_anterior?: string | null
+          id?: string
+          metodo_pago?: string | null
+          monto?: number
+          motivo?: string | null
+          numero_abono?: string | null
+          observaciones?: string | null
+          referencia?: string | null
+          serie_abono?: string | null
+          tipo?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "abonos_factura_original_id_fkey"
+            columns: ["factura_original_id"]
+            isOneToOne: false
+            referencedRelation: "facturas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      abonos_log: {
+        Row: {
+          abono_id: string
+          accion: string
+          created_at: string | null
+          estado: string
+          id: string
+          mensaje: string | null
+          metadatos: Json | null
+          usuario_email: string | null
+          usuario_id: string | null
+        }
+        Insert: {
+          abono_id: string
+          accion: string
+          created_at?: string | null
+          estado: string
+          id?: string
+          mensaje?: string | null
+          metadatos?: Json | null
+          usuario_email?: string | null
+          usuario_id?: string | null
+        }
+        Update: {
+          abono_id?: string
+          accion?: string
+          created_at?: string | null
+          estado?: string
+          id?: string
+          mensaje?: string | null
+          metadatos?: Json | null
+          usuario_email?: string | null
+          usuario_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "abonos_log_abono_id_fkey"
+            columns: ["abono_id"]
+            isOneToOne: false
+            referencedRelation: "abonos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bicicletas: {
         Row: {
           alias: string
@@ -718,9 +839,36 @@ export type Database = {
         Args: { p_factura_id: string }
         Returns: Json
       }
+      generar_numero_abono: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       generar_numero_factura_verifactu: {
         Args: Record<PropertyKey, never>
         Returns: string
+      }
+      obtener_datos_abono_completo: {
+        Args: { p_abono_id: string }
+        Returns: {
+          numero_abono: string
+          fecha_abono: string
+          monto: number
+          tipo: string
+          motivo: string
+          metodo_pago: string
+          referencia: string
+          cliente_nombre: string
+          cliente_email: string
+          cliente_telefono: string
+          cliente_direccion: string
+          factura_numero: string
+          factura_total: number
+          emisor_nombre: string
+          emisor_cif: string
+          emisor_direccion: string
+          hash_actual: string
+          ejercicio_fiscal: number
+        }[]
       }
       obtener_datos_factura_facturae: {
         Args: { p_factura_id: string }
@@ -789,6 +937,16 @@ export type Database = {
         }
         Returns: string
       }
+      registrar_log_abono: {
+        Args: {
+          p_abono_id: string
+          p_accion: string
+          p_estado: string
+          p_mensaje?: string
+          p_metadatos?: Json
+        }
+        Returns: string
+      }
       registrar_log_firma: {
         Args: {
           p_factura_id: string
@@ -833,6 +991,7 @@ export type Database = {
         | "producto"
         | "sistema"
         | "pago"
+        | "abono"
       tipo_accion:
         | "CREAR_CLIENTE"
         | "ACTUALIZAR_CLIENTE"
@@ -855,6 +1014,10 @@ export type Database = {
         | "ACTUALIZAR_PAGO"
         | "ELIMINAR_PAGO"
         | "CONCILIAR_PAGO"
+        | "CREAR_ABONO"
+        | "ACTUALIZAR_ABONO"
+        | "ELIMINAR_ABONO"
+        | "FIRMAR_ABONO"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1002,6 +1165,7 @@ export const Constants = {
         "producto",
         "sistema",
         "pago",
+        "abono",
       ],
       tipo_accion: [
         "CREAR_CLIENTE",
@@ -1025,6 +1189,10 @@ export const Constants = {
         "ACTUALIZAR_PAGO",
         "ELIMINAR_PAGO",
         "CONCILIAR_PAGO",
+        "CREAR_ABONO",
+        "ACTUALIZAR_ABONO",
+        "ELIMINAR_ABONO",
+        "FIRMAR_ABONO",
       ],
     },
   },

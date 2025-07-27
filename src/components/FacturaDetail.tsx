@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { OrdenProductos } from "./OrdenProductos";
-import { Download, MessageCircle, CheckCircle, FileText, X, CreditCard, Plus } from "lucide-react";
+import { Download, MessageCircle, CheckCircle, FileText, X, CreditCard, Plus, RotateCcw } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
@@ -13,6 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { FacturaePanel } from "./FacturaePanel";
 import { PagoForm } from "./PagoForm";
+import { AbonoForm } from "./AbonoForm";
 
 interface Factura {
   id: string;
@@ -91,7 +92,9 @@ export const FacturaDetail = ({ factura, onFacturaUpdated, onClose }: FacturaDet
   const [estadoPago, setEstadoPago] = useState(factura.estado_pago);
   const [metodoPago, setMetodoPago] = useState(factura.metodo_pago || "");
   const [showPagoForm, setShowPagoForm] = useState(false);
+  const [showAbonoForm, setShowAbonoForm] = useState(false);
   const [pagosFactura, setPagosFactura] = useState<any[]>([]);
+  const [abonosFactura, setAbonosFactura] = useState<any[]>([]);
 
   const fetchPagosFactura = async () => {
     try {
@@ -108,8 +111,24 @@ export const FacturaDetail = ({ factura, onFacturaUpdated, onClose }: FacturaDet
     }
   };
 
+  const fetchAbonosFactura = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('abonos')
+        .select('*')
+        .eq('factura_original_id', factura.id)
+        .order('fecha_abono', { ascending: false });
+
+      if (error) throw error;
+      setAbonosFactura(data || []);
+    } catch (error) {
+      console.error('Error cargando abonos:', error);
+    }
+  };
+
   React.useEffect(() => {
     fetchPagosFactura();
+    fetchAbonosFactura();
   }, [factura.id]);
 
   const handleUpdateFactura = async () => {
@@ -456,7 +475,7 @@ export const FacturaDetail = ({ factura, onFacturaUpdated, onClose }: FacturaDet
           Exportar JSON Verifactu
         </Button>
 
-        {factura.estado_pago !== 'pagado' && (
+        {factura.estado_pago !== 'pagado' && factura.estado_pago !== 'anulado' && (
           <Button 
             variant="outline" 
             onClick={() => setShowPagoForm(true)}
@@ -464,6 +483,17 @@ export const FacturaDetail = ({ factura, onFacturaUpdated, onClose }: FacturaDet
           >
             <Plus className="w-4 h-4" />
             Registrar Pago
+          </Button>
+        )}
+
+        {factura.estado_pago !== 'anulado' && (
+          <Button 
+            variant="outline" 
+            onClick={() => setShowAbonoForm(true)}
+            className="flex items-center gap-2"
+          >
+            <RotateCcw className="w-4 h-4" />
+            Crear Abono
           </Button>
         )}
       </div>
@@ -477,7 +507,7 @@ export const FacturaDetail = ({ factura, onFacturaUpdated, onClose }: FacturaDet
             <CreditCard className="w-5 h-5" />
             Pagos Asociados
           </h3>
-          {factura.estado_pago !== 'pagado' && (
+          {factura.estado_pago !== 'pagado' && factura.estado_pago !== 'anulado' && (
             <Button size="sm" onClick={() => setShowPagoForm(true)}>
               <Plus className="w-4 h-4 mr-2" />
               Registrar Pago
@@ -509,7 +539,41 @@ export const FacturaDetail = ({ factura, onFacturaUpdated, onClose }: FacturaDet
             No hay pagos registrados para esta factura
           </div>
         )}
-      </div>
+        </div>
+        
+        <Separator className="my-6" />
+
+        {/* Sección de Abonos */}
+        {abonosFactura.length > 0 && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold flex items-center gap-2">
+                <RotateCcw className="w-5 h-5" />
+                Abonos y Devoluciones
+              </h3>
+            </div>
+            
+            <div className="space-y-2">
+              {abonosFactura.map((abono) => (
+                <div key={abono.id} className="flex justify-between items-center p-3 bg-red-50 rounded-lg border border-red-200">
+                  <div>
+                    <div className="font-medium text-red-700">-€{abono.monto}</div>
+                    <div className="text-sm text-gray-600">
+                      {format(new Date(abono.fecha_abono), "dd/MM/yyyy", { locale: es })} - {abono.tipo === 'nota_credito' ? 'Nota de Crédito' : 'Reembolso'}
+                    </div>
+                    <div className="text-xs text-gray-500">{abono.numero_abono}</div>
+                    {abono.motivo && (
+                      <div className="text-xs text-gray-500">Motivo: {abono.motivo}</div>
+                    )}
+                  </div>
+                  <Badge variant={abono.estado === 'emitido' ? 'default' : 'destructive'}>
+                    {abono.estado}
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
         </TabsContent>
         
         <TabsContent value="facturae">
@@ -529,6 +593,18 @@ export const FacturaDetail = ({ factura, onFacturaUpdated, onClose }: FacturaDet
         montoSugerido={Number(factura.total)}
         onSuccess={() => {
           fetchPagosFactura();
+          onFacturaUpdated();
+        }}
+      />
+
+      <AbonoForm
+        open={showAbonoForm}
+        onOpenChange={setShowAbonoForm}
+        facturaId={factura.id}
+        clienteId={factura.id_cliente}
+        montoMaximo={Number(factura.total)}
+        onSuccess={() => {
+          fetchAbonosFactura();
           onFacturaUpdated();
         }}
       />

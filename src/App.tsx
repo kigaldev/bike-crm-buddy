@@ -11,6 +11,7 @@ import Inventario from "./pages/Inventario";
 import AlertasStock from "./pages/AlertasStock";
 import Facturas from "./pages/Facturas";
 import Pagos from "./pages/Pagos";
+import Abonos from "./pages/Abonos";
 import OrdenesReparacion from "./pages/OrdenesReparacion";
 import Dashboard from "./pages/Dashboard";
 import Logs from "./pages/Logs";
@@ -32,6 +33,7 @@ function ProtectedApp() {
       <Route path="/ordenes" element={<OrdenesReparacion />} />
       <Route path="/facturas" element={<Facturas />} />
       <Route path="/pagos" element={<Pagos />} />
+      <Route path="/abonos" element={<Abonos />} />
       <Route path="/logs" element={<Logs />} />
       <Route path="/analytics" element={<Analytics />} />
       <Route path="*" element={<NotFound />} />
