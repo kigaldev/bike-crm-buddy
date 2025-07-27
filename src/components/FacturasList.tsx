@@ -38,6 +38,11 @@ interface Factura {
   fecha_pago?: string;
   es_rectificativa?: boolean;
   observaciones?: string;
+  email_enviado?: boolean;
+  email_fecha_envio?: string;
+  whatsapp_enviado?: boolean;
+  whatsapp_fecha_envio?: string;
+  estado_notificacion?: string;
   created_at: string;
   updated_at: string;
   clientes?: {
@@ -214,6 +219,30 @@ export const FacturasList = () => {
     }
   };
 
+  const enviarNotificaciones = async (facturaId: string, tipo: 'email' | 'whatsapp' | 'both') => {
+    try {
+      const { data, error } = await supabase.functions.invoke('send-invoice-notifications', {
+        body: { facturaId, tipo }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Notificación enviada",
+        description: `Notificación enviada correctamente por ${tipo}`
+      });
+      
+      fetchFacturas(); // Refresh to show updated status
+    } catch (error: any) {
+      console.error('Error enviando notificación:', error);
+      toast({
+        title: "Error",
+        description: `Error enviando notificación: ${error.message}`,
+        variant: "destructive"
+      });
+    }
+  };
+
   const enviarPorWhatsApp = (factura: Factura) => {
     const telefono = factura.clientes?.telefono?.replace(/[^\d]/g, '');
     const mensaje = `Hola ${factura.clientes?.nombre}, aquí tienes tu factura de reparación por $${factura.total.toFixed(2)}. ${factura.archivo_pdf ? `PDF: ${factura.archivo_pdf}` : ''}`;
@@ -309,12 +338,13 @@ export const FacturasList = () => {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead>Factura</TableHead>
                   <TableHead>Cliente</TableHead>
                   <TableHead>Bicicleta</TableHead>
                   <TableHead>Fecha</TableHead>
                   <TableHead>Total</TableHead>
                   <TableHead>Estado</TableHead>
-                  <TableHead>Método Pago</TableHead>
+                  <TableHead>Notificaciones</TableHead>
                   <TableHead>Acciones</TableHead>
                 </TableRow>
               </TableHeader>
@@ -340,6 +370,7 @@ export const FacturasList = () => {
                         <p className="font-medium">
                           {factura.clientes?.nombre} {factura.clientes?.apellidos}
                         </p>
+                        <p className="text-xs text-muted-foreground">{factura.clientes?.email}</p>
                       </div>
                     </TableCell>
                     <TableCell>
@@ -362,14 +393,23 @@ export const FacturasList = () => {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <div className="max-w-[120px]">
-                        {factura.hash_actual ? (
-                          <span className="text-xs font-mono bg-muted px-2 py-1 rounded">
-                            {factura.hash_actual.slice(0, 12)}...
-                          </span>
-                        ) : (
-                          <span className="text-xs text-muted-foreground">Sin hash</span>
-                        )}
+                      <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs">📧</span>
+                          {factura.email_enviado ? (
+                            <Badge variant="default" className="text-xs">Enviado</Badge>
+                          ) : (
+                            <Badge variant="secondary" className="text-xs">Pendiente</Badge>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs">📱</span>
+                          {factura.whatsapp_enviado ? (
+                            <Badge variant="default" className="text-xs">Enviado</Badge>
+                          ) : (
+                            <Badge variant="secondary" className="text-xs">Pendiente</Badge>
+                          )}
+                        </div>
                       </div>
                     </TableCell>
                     <TableCell>
@@ -395,7 +435,8 @@ export const FacturasList = () => {
                         <Button 
                           size="sm" 
                           variant="outline" 
-                          onClick={() => enviarPorWhatsApp(factura)}
+                          onClick={() => enviarNotificaciones(factura.id, 'both')}
+                          title="Enviar por Email y WhatsApp"
                         >
                           <MessageCircle className="w-4 h-4" />
                         </Button>

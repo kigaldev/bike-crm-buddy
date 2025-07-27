@@ -137,6 +137,34 @@ export const FacturaDetail = ({ factura, onFacturaUpdated, onClose }: FacturaDet
     }
   };
 
+  const enviarNotificaciones = async (tipo: 'email' | 'whatsapp' | 'both') => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('send-invoice-notifications', {
+        body: { facturaId: factura.id, tipo }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Notificación enviada",
+        description: `Notificación enviada correctamente por ${tipo}`
+      });
+      
+      // Refresh to show updated status
+      onFacturaUpdated();
+    } catch (error: any) {
+      console.error('Error enviando notificación:', error);
+      toast({
+        title: "Error",
+        description: `Error enviando notificación: ${error.message}`,
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const enviarPorWhatsApp = () => {
     const telefono = factura.clientes?.telefono?.replace(/[^\d]/g, '');
     const mensaje = `Hola ${factura.clientes?.nombre}, aquí tienes tu factura de reparación por $${factura.total.toFixed(2)}. ${factura.archivo_pdf ? `PDF: ${factura.archivo_pdf}` : ''}`;
@@ -376,9 +404,19 @@ export const FacturaDetail = ({ factura, onFacturaUpdated, onClose }: FacturaDet
         </Button>
         )}
 
-        <Button onClick={enviarPorWhatsApp} variant="outline" className="flex items-center gap-2">
+        <Button onClick={() => enviarNotificaciones('email')} disabled={loading} variant="outline" className="flex items-center gap-2">
           <MessageCircle className="w-4 h-4" />
-          Enviar por WhatsApp
+          {loading ? "Enviando..." : "Enviar por Email"}
+        </Button>
+
+        <Button onClick={() => enviarNotificaciones('whatsapp')} disabled={loading} variant="outline" className="flex items-center gap-2">
+          <MessageCircle className="w-4 h-4" />
+          {loading ? "Enviando..." : "Enviar por WhatsApp"}
+        </Button>
+
+        <Button onClick={() => enviarNotificaciones('both')} disabled={loading} variant="outline" className="flex items-center gap-2">
+          <MessageCircle className="w-4 h-4" />
+          {loading ? "Enviando..." : "Enviar Ambos"}
         </Button>
 
         <Button onClick={exportarJSON} variant="outline" className="flex items-center gap-2">

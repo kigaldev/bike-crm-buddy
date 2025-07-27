@@ -51,6 +51,16 @@ export const generarFacturaAutomatica = async (ordenId: string) => {
 
     if (facturaError) throw facturaError;
 
+    // Enviar notificaciones automáticamente después de generar la factura
+    try {
+      await supabase.functions.invoke('send-invoice-notifications', {
+        body: { facturaId: factura.id, tipo: 'both' }
+      });
+    } catch (notificationError) {
+      console.error('Error enviando notificaciones automáticas:', notificationError);
+      // No lanzar error, la factura ya está creada
+    }
+
     return factura;
   } catch (error) {
     console.error('Error generando factura automática:', error);
