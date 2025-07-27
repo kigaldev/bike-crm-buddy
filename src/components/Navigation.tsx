@@ -90,12 +90,18 @@ export const Navigation = () => {
                     <span>Auditoría</span>
                   </Button>
                 </Link>
-                <Link to="/analytics">
-                  <Button variant="ghost" className="flex items-center space-x-2">
-                    <TrendingUp className="w-4 h-4" />
-                    <span>Analytics</span>
-                  </Button>
-                </Link>
+                 <Link to="/analytics">
+                   <Button variant="ghost" className="flex items-center space-x-2">
+                     <TrendingUp className="w-4 h-4" />
+                     <span>Analytics</span>
+                   </Button>
+                 </Link>
+                 <Link to="/financial-dashboard">
+                   <Button variant="ghost" className="flex items-center space-x-2">
+                     <BarChart3 className="w-4 h-4" />
+                     <span>Dashboard Financiero</span>
+                   </Button>
+                 </Link>
               </>
             )}
             

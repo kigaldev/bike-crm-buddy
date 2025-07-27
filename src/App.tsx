@@ -16,6 +16,7 @@ import OrdenesReparacion from "./pages/OrdenesReparacion";
 import Dashboard from "./pages/Dashboard";
 import Logs from "./pages/Logs";
 import Analytics from "./pages/Analytics";
+import FinancialDashboard from "./pages/FinancialDashboard";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -36,6 +37,7 @@ function ProtectedApp() {
       <Route path="/abonos" element={<Abonos />} />
       <Route path="/logs" element={<Logs />} />
       <Route path="/analytics" element={<Analytics />} />
+      <Route path="/financial-dashboard" element={<FinancialDashboard />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
