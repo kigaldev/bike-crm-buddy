@@ -1,17 +1,18 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { OrdenProductos } from "./OrdenProductos";
-import { Download, MessageCircle, CheckCircle, FileText, X } from "lucide-react";
+import { Download, MessageCircle, CheckCircle, FileText, X, CreditCard, Plus } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { FacturaePanel } from "./FacturaePanel";
+import { PagoForm } from "./PagoForm";
 
 interface Factura {
   id: string;
@@ -89,6 +90,27 @@ export const FacturaDetail = ({ factura, onFacturaUpdated, onClose }: FacturaDet
   const [loading, setLoading] = useState(false);
   const [estadoPago, setEstadoPago] = useState(factura.estado_pago);
   const [metodoPago, setMetodoPago] = useState(factura.metodo_pago || "");
+  const [showPagoForm, setShowPagoForm] = useState(false);
+  const [pagosFactura, setPagosFactura] = useState<any[]>([]);
+
+  const fetchPagosFactura = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('pagos')
+        .select('*')
+        .eq('factura_id', factura.id)
+        .order('fecha_pago', { ascending: false });
+
+      if (error) throw error;
+      setPagosFactura(data || []);
+    } catch (error) {
+      console.error('Error cargando pagos:', error);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchPagosFactura();
+  }, [factura.id]);
 
   const handleUpdateFactura = async () => {
     // Validaciones
@@ -433,6 +455,60 @@ export const FacturaDetail = ({ factura, onFacturaUpdated, onClose }: FacturaDet
           <Download className="w-4 h-4" />
           Exportar JSON Verifactu
         </Button>
+
+        {factura.estado_pago !== 'pagado' && (
+          <Button 
+            variant="outline" 
+            onClick={() => setShowPagoForm(true)}
+            className="flex items-center gap-2"
+          >
+            <Plus className="w-4 h-4" />
+            Registrar Pago
+          </Button>
+        )}
+      </div>
+
+      <Separator className="my-6" />
+
+      {/* Sección de Pagos */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold flex items-center gap-2">
+            <CreditCard className="w-5 h-5" />
+            Pagos Asociados
+          </h3>
+          {factura.estado_pago !== 'pagado' && (
+            <Button size="sm" onClick={() => setShowPagoForm(true)}>
+              <Plus className="w-4 h-4 mr-2" />
+              Registrar Pago
+            </Button>
+          )}
+        </div>
+        
+        {pagosFactura.length > 0 ? (
+          <div className="space-y-2">
+            {pagosFactura.map((pago) => (
+              <div key={pago.id} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                <div>
+                  <div className="font-medium">{pago.monto}€</div>
+                  <div className="text-sm text-gray-600">
+                    {format(new Date(pago.fecha_pago), "dd/MM/yyyy", { locale: es })} - {pago.metodo_pago}
+                  </div>
+                  {pago.referencia && (
+                    <div className="text-xs text-gray-500">Ref: {pago.referencia}</div>
+                  )}
+                </div>
+                <Badge variant={pago.estado_conciliacion === 'conciliado' ? 'default' : 'secondary'}>
+                  {pago.estado_conciliacion}
+                </Badge>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-gray-500 text-center py-4">
+            No hay pagos registrados para esta factura
+          </div>
+        )}
       </div>
         </TabsContent>
         
@@ -444,6 +520,18 @@ export const FacturaDetail = ({ factura, onFacturaUpdated, onClose }: FacturaDet
           />
         </TabsContent>
       </Tabs>
+
+      <PagoForm
+        open={showPagoForm}
+        onOpenChange={setShowPagoForm}
+        clienteId={factura.id_cliente}
+        facturaId={factura.id}
+        montoSugerido={Number(factura.total)}
+        onSuccess={() => {
+          fetchPagosFactura();
+          onFacturaUpdated();
+        }}
+      />
     </div>
   );
 };

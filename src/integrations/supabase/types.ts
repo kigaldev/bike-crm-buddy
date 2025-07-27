@@ -540,6 +540,72 @@ export type Database = {
           },
         ]
       }
+      pagos: {
+        Row: {
+          archivo_justificante: string | null
+          cliente_id: string
+          created_at: string
+          es_anticipo: boolean
+          es_parcial: boolean
+          estado_conciliacion: string
+          factura_id: string | null
+          fecha_pago: string
+          id: string
+          metodo_pago: string
+          monto: number
+          observaciones: string | null
+          referencia: string | null
+          updated_at: string
+        }
+        Insert: {
+          archivo_justificante?: string | null
+          cliente_id: string
+          created_at?: string
+          es_anticipo?: boolean
+          es_parcial?: boolean
+          estado_conciliacion?: string
+          factura_id?: string | null
+          fecha_pago?: string
+          id?: string
+          metodo_pago: string
+          monto: number
+          observaciones?: string | null
+          referencia?: string | null
+          updated_at?: string
+        }
+        Update: {
+          archivo_justificante?: string | null
+          cliente_id?: string
+          created_at?: string
+          es_anticipo?: boolean
+          es_parcial?: boolean
+          estado_conciliacion?: string
+          factura_id?: string | null
+          fecha_pago?: string
+          id?: string
+          metodo_pago?: string
+          monto?: number
+          observaciones?: string | null
+          referencia?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pagos_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pagos_factura_id_fkey"
+            columns: ["factura_id"]
+            isOneToOne: false
+            referencedRelation: "facturas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       productos_inventario: {
         Row: {
           cantidad_actual: number
@@ -692,6 +758,23 @@ export type Database = {
           bicicleta_info: string
         }[]
       }
+      obtener_datos_pago_justificante: {
+        Args: { p_pago_id: string }
+        Returns: {
+          numero_recibo: string
+          fecha_pago: string
+          monto: number
+          metodo_pago: string
+          referencia: string
+          cliente_nombre: string
+          cliente_nif: string
+          cliente_direccion: string
+          factura_numero: string
+          emisor_nombre: string
+          emisor_cif: string
+          emisor_direccion: string
+        }[]
+      }
       promote_user_to_admin: {
         Args: { user_email: string; user_full_name: string }
         Returns: undefined
@@ -749,6 +832,7 @@ export type Database = {
         | "factura"
         | "producto"
         | "sistema"
+        | "pago"
       tipo_accion:
         | "CREAR_CLIENTE"
         | "ACTUALIZAR_CLIENTE"
@@ -767,6 +851,10 @@ export type Database = {
         | "ELIMINAR_PRODUCTO"
         | "LOGIN"
         | "LOGOUT"
+        | "CREAR_PAGO"
+        | "ACTUALIZAR_PAGO"
+        | "ELIMINAR_PAGO"
+        | "CONCILIAR_PAGO"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -913,6 +1001,7 @@ export const Constants = {
         "factura",
         "producto",
         "sistema",
+        "pago",
       ],
       tipo_accion: [
         "CREAR_CLIENTE",
@@ -932,6 +1021,10 @@ export const Constants = {
         "ELIMINAR_PRODUCTO",
         "LOGIN",
         "LOGOUT",
+        "CREAR_PAGO",
+        "ACTUALIZAR_PAGO",
+        "ELIMINAR_PAGO",
+        "CONCILIAR_PAGO",
       ],
     },
   },
