@@ -42,8 +42,8 @@ export const PagosList = () => {
   const [showForm, setShowForm] = useState(false);
   const [filtros, setFiltros] = useState({
     busqueda: "",
-    estado: "",
-    metodo: "",
+    estado: "all",
+    metodo: "all",
     fechaDesde: "",
     fechaHasta: "",
   });
@@ -89,12 +89,12 @@ export const PagosList = () => {
     }
 
     // Filtro por estado
-    if (filtros.estado) {
+    if (filtros.estado && filtros.estado !== "all") {
       resultados = resultados.filter(pago => pago.estado_conciliacion === filtros.estado);
     }
 
     // Filtro por método
-    if (filtros.metodo) {
+    if (filtros.metodo && filtros.metodo !== "all") {
       resultados = resultados.filter(pago => pago.metodo_pago === filtros.metodo);
     }
 
@@ -112,8 +112,8 @@ export const PagosList = () => {
   const limpiarFiltros = () => {
     setFiltros({
       busqueda: "",
-      estado: "",
-      metodo: "",
+      estado: "all",
+      metodo: "all",
       fechaDesde: "",
       fechaHasta: "",
     });
@@ -215,7 +215,7 @@ export const PagosList = () => {
                   <SelectValue placeholder="Estado" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todos los estados</SelectItem>
+                  <SelectItem value="all">Todos los estados</SelectItem>
                   <SelectItem value="pendiente">Pendiente</SelectItem>
                   <SelectItem value="conciliado">Conciliado</SelectItem>
                   <SelectItem value="parcial">Parcial</SelectItem>
@@ -228,7 +228,7 @@ export const PagosList = () => {
                   <SelectValue placeholder="Método" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todos los métodos</SelectItem>
+                  <SelectItem value="all">Todos los métodos</SelectItem>
                   <SelectItem value="efectivo">Efectivo</SelectItem>
                   <SelectItem value="tarjeta">Tarjeta</SelectItem>
                   <SelectItem value="transferencia">Transferencia</SelectItem>

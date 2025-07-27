@@ -122,7 +122,7 @@ export const PagoForm = ({
         .from('pagos')
         .insert({
           cliente_id: data.cliente_id,
-          factura_id: data.factura_id || null,
+          factura_id: data.factura_id === "none" ? null : data.factura_id || null,
           monto: data.monto,
           fecha_pago: data.fecha_pago,
           metodo_pago: data.metodo_pago,
@@ -197,7 +197,7 @@ export const PagoForm = ({
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="">Sin factura asociada</SelectItem>
+                        <SelectItem value="none">Sin factura asociada</SelectItem>
                         {facturasPendientes.map((factura) => (
                           <SelectItem key={factura.id} value={factura.id}>
                             {factura.numero_factura} - {factura.total}€ ({factura.estado_pago})
