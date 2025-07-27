@@ -61,6 +61,10 @@ export const generarFacturaAutomatica = async (ordenId: string) => {
       // No lanzar error, la factura ya está creada
     }
 
+    // Para empresas (con datos fiscales), generar automáticamente XML Facturae
+    // Esto se puede activar manualmente desde el panel de facturas
+    console.log('Factura creada correctamente. XML Facturae disponible en el panel.');
+
     return factura;
   } catch (error) {
     console.error('Error generando factura automática:', error);

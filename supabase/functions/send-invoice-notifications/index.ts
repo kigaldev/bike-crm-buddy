@@ -176,6 +176,16 @@ async function enviarEmail(factura: any, facturaId: string, supabase: any) {
             
             <p>Esta factura cumple con la normativa Verifactu y es válida para efectos fiscales.</p>
             
+            ${factura.cliente_nif && factura.xml_firmado ? `
+            <div style="margin-top: 20px; padding: 15px; background-color: #e8f4fd; border-radius: 8px;">
+                <h3 style="color: #1a365d; margin: 0 0 10px 0;">📋 Facturae XML Disponible</h3>
+                <p style="margin: 0; color: #2d3748;">
+                    Como empresa registrada, tiene disponible el archivo XML Facturae firmado digitalmente, 
+                    compatible con la administración pública española. Puede descargarlo desde el panel de facturas.
+                </p>
+            </div>
+            ` : ''}
+            
             <p>Si tienes alguna pregunta, no dudes en contactarnos:</p>
             <ul>
                 <li>📞 Teléfono: ${TALLER_CONFIG.telefono}</li>

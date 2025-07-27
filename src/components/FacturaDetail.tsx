@@ -6,10 +6,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { OrdenProductos } from "./OrdenProductos";
 import { Download, MessageCircle, CheckCircle, FileText, X } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { FacturaePanel } from "./FacturaePanel";
 
 interface Factura {
   id: string;
@@ -242,6 +244,14 @@ export const FacturaDetail = ({ factura, onFacturaUpdated, onClose }: FacturaDet
         </Button>
       </div>
 
+      <Tabs defaultValue="detalles" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="detalles">📋 Detalles de Factura</TabsTrigger>
+          <TabsTrigger value="facturae">🖋️ Firma & Facturae</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="detalles" className="space-y-6">
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Información del Cliente */}
         <Card>
@@ -424,6 +434,16 @@ export const FacturaDetail = ({ factura, onFacturaUpdated, onClose }: FacturaDet
           Exportar JSON Verifactu
         </Button>
       </div>
+        </TabsContent>
+        
+        <TabsContent value="facturae">
+          <FacturaePanel 
+            facturaId={factura.id} 
+            factura={factura} 
+            onFacturaUpdated={onFacturaUpdated} 
+          />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

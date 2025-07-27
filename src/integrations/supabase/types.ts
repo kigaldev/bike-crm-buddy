@@ -110,6 +110,7 @@ export type Database = {
         Row: {
           archivo_pdf: string | null
           base_imponible: number | null
+          certificado_usado: string | null
           cliente_nif: string | null
           created_at: string
           cuota_iva: number | null
@@ -120,10 +121,12 @@ export type Database = {
           emisor_direccion: string | null
           emisor_nombre: string | null
           es_rectificativa: boolean | null
+          estado_facturae: string | null
           estado_notificacion: string | null
           estado_pago: string
           factura_origen_id: string | null
           fecha_emision: string
+          fecha_firma: string | null
           fecha_pago: string | null
           hash_actual: string | null
           hash_anterior: string | null
@@ -139,12 +142,16 @@ export type Database = {
           total: number
           ultimo_error: string | null
           updated_at: string
+          validacion_xsd: boolean | null
           whatsapp_enviado: boolean | null
           whatsapp_fecha_envio: string | null
+          xml_facturae: string | null
+          xml_firmado: string | null
         }
         Insert: {
           archivo_pdf?: string | null
           base_imponible?: number | null
+          certificado_usado?: string | null
           cliente_nif?: string | null
           created_at?: string
           cuota_iva?: number | null
@@ -155,10 +162,12 @@ export type Database = {
           emisor_direccion?: string | null
           emisor_nombre?: string | null
           es_rectificativa?: boolean | null
+          estado_facturae?: string | null
           estado_notificacion?: string | null
           estado_pago?: string
           factura_origen_id?: string | null
           fecha_emision?: string
+          fecha_firma?: string | null
           fecha_pago?: string | null
           hash_actual?: string | null
           hash_anterior?: string | null
@@ -174,12 +183,16 @@ export type Database = {
           total: number
           ultimo_error?: string | null
           updated_at?: string
+          validacion_xsd?: boolean | null
           whatsapp_enviado?: boolean | null
           whatsapp_fecha_envio?: string | null
+          xml_facturae?: string | null
+          xml_firmado?: string | null
         }
         Update: {
           archivo_pdf?: string | null
           base_imponible?: number | null
+          certificado_usado?: string | null
           cliente_nif?: string | null
           created_at?: string
           cuota_iva?: number | null
@@ -190,10 +203,12 @@ export type Database = {
           emisor_direccion?: string | null
           emisor_nombre?: string | null
           es_rectificativa?: boolean | null
+          estado_facturae?: string | null
           estado_notificacion?: string | null
           estado_pago?: string
           factura_origen_id?: string | null
           fecha_emision?: string
+          fecha_firma?: string | null
           fecha_pago?: string | null
           hash_actual?: string | null
           hash_anterior?: string | null
@@ -209,8 +224,11 @@ export type Database = {
           total?: number
           ultimo_error?: string | null
           updated_at?: string
+          validacion_xsd?: boolean | null
           whatsapp_enviado?: boolean | null
           whatsapp_fecha_envio?: string | null
+          xml_facturae?: string | null
+          xml_firmado?: string | null
         }
         Relationships: [
           {
@@ -276,6 +294,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      firmas_log: {
+        Row: {
+          accion: string
+          archivo_generado: string | null
+          certificado_usado: string | null
+          created_at: string
+          errores_validacion: Json | null
+          estado: string
+          factura_id: string
+          id: string
+          metadatos: Json | null
+          usuario_email: string
+          usuario_id: string | null
+        }
+        Insert: {
+          accion: string
+          archivo_generado?: string | null
+          certificado_usado?: string | null
+          created_at?: string
+          errores_validacion?: Json | null
+          estado: string
+          factura_id: string
+          id?: string
+          metadatos?: Json | null
+          usuario_email: string
+          usuario_id?: string | null
+        }
+        Update: {
+          accion?: string
+          archivo_generado?: string | null
+          certificado_usado?: string | null
+          created_at?: string
+          errores_validacion?: Json | null
+          estado?: string
+          factura_id?: string
+          id?: string
+          metadatos?: Json | null
+          usuario_email?: string
+          usuario_id?: string | null
+        }
+        Relationships: []
       }
       logs: {
         Row: {
@@ -596,6 +656,30 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      obtener_datos_factura_facturae: {
+        Args: { p_factura_id: string }
+        Returns: {
+          numero_factura: string
+          fecha_emision: string
+          total: number
+          base_imponible: number
+          cuota_iva: number
+          tipo_iva: number
+          emisor_cif: string
+          emisor_nombre: string
+          emisor_direccion: string
+          cliente_nombre: string
+          cliente_nif: string
+          cliente_direccion: string
+          cliente_telefono: string
+          cliente_email: string
+          bicicleta_info: string
+          descripcion_trabajo: string
+          hash_actual: string
+          hash_anterior: string
+          ejercicio_fiscal: number
+        }[]
+      }
       obtener_datos_factura_notificacion: {
         Args: { p_factura_id: string }
         Returns: {
@@ -619,6 +703,18 @@ export type Database = {
           p_id_entidad: string
           p_descripcion: string
           p_detalles_adicionales?: Json
+        }
+        Returns: string
+      }
+      registrar_log_firma: {
+        Args: {
+          p_factura_id: string
+          p_accion: string
+          p_estado: string
+          p_archivo_generado?: string
+          p_certificado_usado?: string
+          p_errores_validacion?: Json
+          p_metadatos?: Json
         }
         Returns: string
       }
