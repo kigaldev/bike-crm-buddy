@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { EmpresaProvider } from "@/hooks/useEmpresaContext";
+import { AppUsageMiddleware } from "@/components/AppUsageMiddleware";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Bicicletas from "./pages/Bicicletas";
@@ -24,6 +25,7 @@ import Auth from "./pages/Auth";
 import Onboarding from "./pages/Onboarding";
 import Usuarios from "./pages/Usuarios";
 import FacturasSaas from "./pages/FacturasSaas";
+import UsoApps from "./pages/UsoApps";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -44,6 +46,7 @@ function ProtectedApp() {
 
   return (
     <EmpresaProvider>
+      <AppUsageMiddleware />
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/dashboard" element={<Dashboard />} />
@@ -61,6 +64,7 @@ function ProtectedApp() {
         <Route path="/financial-dashboard" element={<FinancialDashboard />} />
         <Route path="/usuarios" element={<Usuarios />} />
         <Route path="/facturas-saas" element={<FacturasSaas />} />
+        <Route path="/uso-apps" element={<UsoApps />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </EmpresaProvider>

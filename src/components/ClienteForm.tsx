@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useActionTracker } from "@/hooks/useAppUsageTracker";
 import { logCliente } from "@/lib/logs";
 
 interface Cliente {
@@ -35,6 +36,7 @@ export const ClienteForm = ({ cliente, onClienteCreated, isEditing = false }: Cl
   });
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const { registrarCreacion, registrarEdicion } = useActionTracker();
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -89,6 +91,12 @@ export const ClienteForm = ({ cliente, onClienteCreated, isEditing = false }: Cl
         if (error) throw error;
 
         await logCliente.actualizar(cliente.id, `${formData.nombre} ${formData.apellidos}`);
+        
+        // Registrar uso de app
+        registrarEdicion('clientes', 'cliente', cliente.id, {
+          nombre_completo: `${formData.nombre} ${formData.apellidos}`,
+          email: formData.email
+        });
       } else {
         // Crear nuevo cliente
         const { data: newCliente, error } = await supabase
@@ -100,6 +108,12 @@ export const ClienteForm = ({ cliente, onClienteCreated, isEditing = false }: Cl
         if (error) throw error;
 
         await logCliente.crear(newCliente.id, `${formData.nombre} ${formData.apellidos}`);
+        
+        // Registrar uso de app
+        registrarCreacion('clientes', 'cliente', newCliente.id, {
+          nombre_completo: `${formData.nombre} ${formData.apellidos}`,
+          email: formData.email
+        });
       }
 
       toast({

@@ -12,6 +12,7 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useActionTracker } from "@/hooks/useAppUsageTracker";
 import { OrdenProductos } from "./OrdenProductos";
 
 interface OrdenReparacion {
@@ -55,6 +56,8 @@ export const OrdenReparacionForm = ({
   onCancel
 }: OrdenReparacionFormProps) => {
   const { toast } = useToast();
+  const { registrarCreacion, registrarEdicion } = useActionTracker();
+  
   const [formData, setFormData] = useState({
     cliente_id: orden?.cliente_id || clienteId || "",
     bicicleta_id: orden?.bicicleta_id || bicicletaId || "",
@@ -220,6 +223,14 @@ export const OrdenReparacionForm = ({
         if (error) throw error;
 
         onOrdenUpdated?.(data);
+        
+        // Registrar uso de app
+        registrarEdicion('ordenes', 'orden_reparacion', orden.id, {
+          estado: formData.estado,
+          cliente_id: formData.cliente_id,
+          descripcion: formData.descripcion_trabajo
+        });
+        
         toast({
           title: "Éxito",
           description: "Orden de reparación actualizada correctamente"
@@ -234,6 +245,14 @@ export const OrdenReparacionForm = ({
         if (error) throw error;
 
         onOrdenCreated?.(data);
+        
+        // Registrar uso de app
+        registrarCreacion('ordenes', 'orden_reparacion', data.id, {
+          estado: formData.estado,
+          cliente_id: formData.cliente_id,
+          descripcion: formData.descripcion_trabajo
+        });
+        
         toast({
           title: "Éxito",
           description: "Orden de reparación creada correctamente"

@@ -24,6 +24,7 @@ import { es } from "date-fns/locale";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { StockAlerts } from "@/components/StockAlerts";
+import { AppUsageAlerts } from "@/components/AppUsageAlerts";
 
 interface DashboardMetrics {
   ordenesActivas: number;
@@ -498,6 +499,15 @@ export const Dashboard = () => {
           <StockAlerts showActions={true} maxItems={5} />
         </div>
       )}
+
+      {/* App Usage Alerts Section */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold flex items-center gap-2">
+          <Activity className="w-5 h-5 text-blue-500" />
+          Uso de Aplicaciones
+        </h2>
+        <AppUsageAlerts />
+      </div>
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

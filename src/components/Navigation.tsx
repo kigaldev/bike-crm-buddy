@@ -128,6 +128,12 @@ export const Navigation = () => {
                      <span>Analytics</span>
                    </Button>
                  </Link>
+                 <Link to="/uso-apps">
+                   <Button variant="ghost" className="flex items-center space-x-2">
+                     <BarChart3 className="w-4 h-4" />
+                     <span>Uso Apps</span>
+                   </Button>
+                 </Link>
                  <Link to="/financial-dashboard">
                    <Button variant="ghost" className="flex items-center space-x-2">
                      <BarChart3 className="w-4 h-4" />

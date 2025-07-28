@@ -1284,6 +1284,39 @@ export type Database = {
           },
         ]
       }
+      uso_apps_empresa: {
+        Row: {
+          app_codigo: string
+          created_at: string
+          empresa_id: string
+          fecha_uso: string
+          id: string
+          metadata: Json | null
+          tipo_accion: string
+          user_id: string | null
+        }
+        Insert: {
+          app_codigo: string
+          created_at?: string
+          empresa_id: string
+          fecha_uso?: string
+          id?: string
+          metadata?: Json | null
+          tipo_accion: string
+          user_id?: string | null
+        }
+        Update: {
+          app_codigo?: string
+          created_at?: string
+          empresa_id?: string
+          fecha_uso?: string
+          id?: string
+          metadata?: Json | null
+          tipo_accion?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       usuarios_empresas: {
         Row: {
           activo: boolean | null
@@ -1395,6 +1428,15 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      obtener_actividad_diaria_empresa: {
+        Args: { p_empresa_id: string; p_dias?: number }
+        Returns: {
+          fecha: string
+          total_acciones: number
+          apps_usadas: number
+          usuarios_activos: number
+        }[]
+      }
       obtener_analisis_alertas: {
         Args: { p_fecha_inicio: string; p_fecha_fin: string }
         Returns: {
@@ -1424,6 +1466,15 @@ export type Database = {
           total_monto: number
           numero_pagos: number
           porcentaje: number
+        }[]
+      }
+      obtener_apps_sin_uso_reciente: {
+        Args: { p_empresa_id: string; p_dias?: number }
+        Returns: {
+          app_codigo: string
+          app_nombre: string
+          ultimo_uso: string
+          dias_sin_uso: number
         }[]
       }
       obtener_datos_abono_completo: {
@@ -1521,6 +1572,18 @@ export type Database = {
           emisor_direccion: string
         }[]
       }
+      obtener_estadisticas_uso_empresa: {
+        Args: { p_empresa_id: string }
+        Returns: {
+          app_codigo: string
+          app_nombre: string
+          total_acciones: number
+          ultimo_uso: string
+          acciones_mes_actual: number
+          acciones_semana_actual: number
+          tipos_acciones: Json
+        }[]
+      }
       obtener_facturacion_mensual: {
         Args: { p_ano?: number }
         Returns: {
@@ -1615,6 +1678,10 @@ export type Database = {
           p_error?: string
           p_metadatos?: Json
         }
+        Returns: string
+      }
+      registrar_uso_app: {
+        Args: { p_app_codigo: string; p_tipo_accion: string; p_metadata?: Json }
         Returns: string
       }
       user_has_empresa_access: {
