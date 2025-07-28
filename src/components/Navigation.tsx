@@ -70,6 +70,13 @@ export const Navigation = () => {
               </Button>
             </Link>
             
+            <Link to="/facturas-saas">
+              <Button variant="ghost" className="flex items-center space-x-2">
+                <CreditCard className="w-4 h-4" />
+                <span>SaaS</span>
+              </Button>
+            </Link>
+            
             <Link to="/pagos">
               <Button variant="ghost" className="flex items-center space-x-2">
                 <CreditCard className="w-4 h-4" />
@@ -107,7 +114,7 @@ export const Navigation = () => {
               </Link>
             )}
             
-            {(profile?.role === 'admin' || profile?.role === 'auditor') && (
+            {(profile?.rol === 'admin' || profile?.rol === 'auditor') && (
               <>
                 <Link to="/logs">
                   <Button variant="ghost" className="flex items-center space-x-2">
@@ -134,8 +141,8 @@ export const Navigation = () => {
               <div className="flex items-center space-x-3 ml-4 pl-4 border-l">
                 <div className="flex items-center space-x-2">
                   <span className="text-sm text-muted-foreground">{profile.full_name || profile.email}</span>
-                  <Badge className={getRoleColor(profile.role)}>
-                    {profile.role}
+                   <Badge className={getRoleColor(profile.rol)}>
+                     {profile.rol}
                   </Badge>
                 </div>
                 <Button variant="ghost" size="sm" onClick={signOut}>

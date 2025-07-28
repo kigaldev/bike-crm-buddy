@@ -21,6 +21,7 @@ export type Database = {
           creado_por: string | null
           created_at: string | null
           ejercicio_fiscal: number | null
+          empresa_id: string | null
           estado: string | null
           factura_original_id: string | null
           fecha_abono: string | null
@@ -43,6 +44,7 @@ export type Database = {
           creado_por?: string | null
           created_at?: string | null
           ejercicio_fiscal?: number | null
+          empresa_id?: string | null
           estado?: string | null
           factura_original_id?: string | null
           fecha_abono?: string | null
@@ -65,6 +67,7 @@ export type Database = {
           creado_por?: string | null
           created_at?: string | null
           ejercicio_fiscal?: number | null
+          empresa_id?: string | null
           estado?: string | null
           factura_original_id?: string | null
           fecha_abono?: string | null
@@ -82,6 +85,13 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "abonos_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "abonos_factura_original_id_fkey"
             columns: ["factura_original_id"]
@@ -139,6 +149,7 @@ export type Database = {
         Row: {
           created_at: string | null
           descripcion: string
+          empresa_id: string | null
           enviar_email: boolean | null
           enviar_whatsapp: boolean | null
           es_recurrente: boolean | null
@@ -159,6 +170,7 @@ export type Database = {
         Insert: {
           created_at?: string | null
           descripcion: string
+          empresa_id?: string | null
           enviar_email?: boolean | null
           enviar_whatsapp?: boolean | null
           es_recurrente?: boolean | null
@@ -179,6 +191,7 @@ export type Database = {
         Update: {
           created_at?: string | null
           descripcion?: string
+          empresa_id?: string | null
           enviar_email?: boolean | null
           enviar_whatsapp?: boolean | null
           es_recurrente?: boolean | null
@@ -196,6 +209,77 @@ export type Database = {
           tipo_entidad?: string | null
           updated_at?: string | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "alertas_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      apps: {
+        Row: {
+          activa: boolean | null
+          badge: string | null
+          categoria: string | null
+          codigo: string
+          created_at: string | null
+          descripcion: string | null
+          es_core: boolean | null
+          es_gratuita: boolean | null
+          icono: string | null
+          id: string
+          nombre: string
+          orden_display: number | null
+          precio_anual: number | null
+          precio_mensual: number | null
+          stripe_price_monthly: string | null
+          stripe_price_yearly: string | null
+          stripe_product_id: string | null
+          trial_dias: number | null
+        }
+        Insert: {
+          activa?: boolean | null
+          badge?: string | null
+          categoria?: string | null
+          codigo: string
+          created_at?: string | null
+          descripcion?: string | null
+          es_core?: boolean | null
+          es_gratuita?: boolean | null
+          icono?: string | null
+          id?: string
+          nombre: string
+          orden_display?: number | null
+          precio_anual?: number | null
+          precio_mensual?: number | null
+          stripe_price_monthly?: string | null
+          stripe_price_yearly?: string | null
+          stripe_product_id?: string | null
+          trial_dias?: number | null
+        }
+        Update: {
+          activa?: boolean | null
+          badge?: string | null
+          categoria?: string | null
+          codigo?: string
+          created_at?: string | null
+          descripcion?: string | null
+          es_core?: boolean | null
+          es_gratuita?: boolean | null
+          icono?: string | null
+          id?: string
+          nombre?: string
+          orden_display?: number | null
+          precio_anual?: number | null
+          precio_mensual?: number | null
+          stripe_price_monthly?: string | null
+          stripe_price_yearly?: string | null
+          stripe_product_id?: string | null
+          trial_dias?: number | null
+        }
         Relationships: []
       }
       bicicletas: {
@@ -204,6 +288,7 @@ export type Database = {
           cliente_id: string
           color: string | null
           created_at: string
+          empresa_id: string | null
           fecha_compra: string | null
           id: string
           marca: string
@@ -218,6 +303,7 @@ export type Database = {
           cliente_id: string
           color?: string | null
           created_at?: string
+          empresa_id?: string | null
           fecha_compra?: string | null
           id?: string
           marca: string
@@ -232,6 +318,7 @@ export type Database = {
           cliente_id?: string
           color?: string | null
           created_at?: string
+          empresa_id?: string | null
           fecha_compra?: string | null
           id?: string
           marca?: string
@@ -249,6 +336,13 @@ export type Database = {
             referencedRelation: "clientes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "bicicletas_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
         ]
       }
       clientes: {
@@ -257,6 +351,7 @@ export type Database = {
           created_at: string
           direccion: string | null
           email: string
+          empresa_id: string | null
           fecha_alta: string
           id: string
           nombre: string
@@ -269,6 +364,7 @@ export type Database = {
           created_at?: string
           direccion?: string | null
           email: string
+          empresa_id?: string | null
           fecha_alta?: string
           id?: string
           nombre: string
@@ -281,6 +377,7 @@ export type Database = {
           created_at?: string
           direccion?: string | null
           email?: string
+          empresa_id?: string | null
           fecha_alta?: string
           id?: string
           nombre?: string
@@ -288,7 +385,126 @@ export type Database = {
           telefono?: string
           updated_at?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "clientes_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      empresas: {
+        Row: {
+          cif: string | null
+          configuracion: Json | null
+          created_at: string | null
+          direccion: string | null
+          dominio_personalizado: string | null
+          email: string | null
+          estado_suscripcion: string | null
+          fecha_creacion: string | null
+          id: string
+          logo: string | null
+          nombre_comercial: string
+          plan_actual: string | null
+          razon_social: string | null
+          stripe_customer_id: string | null
+          telefono: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          cif?: string | null
+          configuracion?: Json | null
+          created_at?: string | null
+          direccion?: string | null
+          dominio_personalizado?: string | null
+          email?: string | null
+          estado_suscripcion?: string | null
+          fecha_creacion?: string | null
+          id?: string
+          logo?: string | null
+          nombre_comercial: string
+          plan_actual?: string | null
+          razon_social?: string | null
+          stripe_customer_id?: string | null
+          telefono?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          cif?: string | null
+          configuracion?: Json | null
+          created_at?: string | null
+          direccion?: string | null
+          dominio_personalizado?: string | null
+          email?: string | null
+          estado_suscripcion?: string | null
+          fecha_creacion?: string | null
+          id?: string
+          logo?: string | null
+          nombre_comercial?: string
+          plan_actual?: string | null
+          razon_social?: string | null
+          stripe_customer_id?: string | null
+          telefono?: string | null
+          updated_at?: string | null
+        }
         Relationships: []
+      }
+      empresas_apps: {
+        Row: {
+          activa: boolean | null
+          app_id: string | null
+          configuracion: Json | null
+          created_at: string | null
+          empresa_id: string | null
+          fecha_activacion: string | null
+          fecha_vencimiento: string | null
+          id: string
+          trial_activo: boolean | null
+          trial_vence: string | null
+        }
+        Insert: {
+          activa?: boolean | null
+          app_id?: string | null
+          configuracion?: Json | null
+          created_at?: string | null
+          empresa_id?: string | null
+          fecha_activacion?: string | null
+          fecha_vencimiento?: string | null
+          id?: string
+          trial_activo?: boolean | null
+          trial_vence?: string | null
+        }
+        Update: {
+          activa?: boolean | null
+          app_id?: string | null
+          configuracion?: Json | null
+          created_at?: string | null
+          empresa_id?: string | null
+          fecha_activacion?: string | null
+          fecha_vencimiento?: string | null
+          id?: string
+          trial_activo?: boolean | null
+          trial_vence?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "empresas_apps_app_id_fkey"
+            columns: ["app_id"]
+            isOneToOne: false
+            referencedRelation: "apps"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "empresas_apps_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       facturas: {
         Row: {
@@ -304,6 +520,7 @@ export type Database = {
           emisor_cif: string | null
           emisor_direccion: string | null
           emisor_nombre: string | null
+          empresa_id: string | null
           es_rectificativa: boolean | null
           estado_facturae: string | null
           estado_notificacion: string | null
@@ -345,6 +562,7 @@ export type Database = {
           emisor_cif?: string | null
           emisor_direccion?: string | null
           emisor_nombre?: string | null
+          empresa_id?: string | null
           es_rectificativa?: boolean | null
           estado_facturae?: string | null
           estado_notificacion?: string | null
@@ -386,6 +604,7 @@ export type Database = {
           emisor_cif?: string | null
           emisor_direccion?: string | null
           emisor_nombre?: string | null
+          empresa_id?: string | null
           es_rectificativa?: boolean | null
           estado_facturae?: string | null
           estado_notificacion?: string | null
@@ -415,6 +634,13 @@ export type Database = {
           xml_firmado?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "facturas_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "facturas_factura_origen_id_fkey"
             columns: ["factura_origen_id"]
@@ -479,6 +705,78 @@ export type Database = {
           },
         ]
       }
+      facturas_saas: {
+        Row: {
+          app_id: string
+          archivo_pdf: string | null
+          concepto: string
+          created_at: string
+          datos_empresa: Json
+          datos_stripe: Json | null
+          empresa_id: string
+          estado: string
+          fecha_factura: string
+          id: string
+          importe_iva: number
+          importe_sin_iva: number
+          importe_total: number
+          numero_factura: string
+          periodo_fin: string
+          periodo_inicio: string
+          stripe_invoice_id: string
+          stripe_payment_status: string
+          stripe_subscription_id: string
+          tipo_iva: number
+          updated_at: string
+        }
+        Insert: {
+          app_id: string
+          archivo_pdf?: string | null
+          concepto: string
+          created_at?: string
+          datos_empresa: Json
+          datos_stripe?: Json | null
+          empresa_id: string
+          estado?: string
+          fecha_factura?: string
+          id?: string
+          importe_iva: number
+          importe_sin_iva: number
+          importe_total: number
+          numero_factura: string
+          periodo_fin: string
+          periodo_inicio: string
+          stripe_invoice_id: string
+          stripe_payment_status: string
+          stripe_subscription_id: string
+          tipo_iva?: number
+          updated_at?: string
+        }
+        Update: {
+          app_id?: string
+          archivo_pdf?: string | null
+          concepto?: string
+          created_at?: string
+          datos_empresa?: Json
+          datos_stripe?: Json | null
+          empresa_id?: string
+          estado?: string
+          fecha_factura?: string
+          id?: string
+          importe_iva?: number
+          importe_sin_iva?: number
+          importe_total?: number
+          numero_factura?: string
+          periodo_fin?: string
+          periodo_inicio?: string
+          stripe_invoice_id?: string
+          stripe_payment_status?: string
+          stripe_subscription_id?: string
+          tipo_iva?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       firmas_log: {
         Row: {
           accion: string
@@ -526,6 +824,7 @@ export type Database = {
           created_at: string
           descripcion: string
           detalles_adicionales: Json | null
+          empresa_id: string | null
           entidad_afectada: Database["public"]["Enums"]["entidad_tipo"]
           fecha_hora: string
           id: string
@@ -538,6 +837,7 @@ export type Database = {
           created_at?: string
           descripcion: string
           detalles_adicionales?: Json | null
+          empresa_id?: string | null
           entidad_afectada: Database["public"]["Enums"]["entidad_tipo"]
           fecha_hora?: string
           id?: string
@@ -550,6 +850,7 @@ export type Database = {
           created_at?: string
           descripcion?: string
           detalles_adicionales?: Json | null
+          empresa_id?: string | null
           entidad_afectada?: Database["public"]["Enums"]["entidad_tipo"]
           fecha_hora?: string
           id?: string
@@ -558,7 +859,15 @@ export type Database = {
           usuario_email?: string
           usuario_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "logs_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       notificaciones_log: {
         Row: {
@@ -668,6 +977,7 @@ export type Database = {
           costo_estimado: number | null
           created_at: string
           descripcion_trabajo: string | null
+          empresa_id: string | null
           estado: string
           fecha_entrada: string
           fecha_estim_entrega: string | null
@@ -683,6 +993,7 @@ export type Database = {
           costo_estimado?: number | null
           created_at?: string
           descripcion_trabajo?: string | null
+          empresa_id?: string | null
           estado?: string
           fecha_entrada?: string
           fecha_estim_entrega?: string | null
@@ -698,6 +1009,7 @@ export type Database = {
           costo_estimado?: number | null
           created_at?: string
           descripcion_trabajo?: string | null
+          empresa_id?: string | null
           estado?: string
           fecha_entrada?: string
           fecha_estim_entrega?: string | null
@@ -722,6 +1034,13 @@ export type Database = {
             referencedRelation: "clientes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "ordenes_reparacion_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
         ]
       }
       pagos: {
@@ -729,6 +1048,7 @@ export type Database = {
           archivo_justificante: string | null
           cliente_id: string
           created_at: string
+          empresa_id: string | null
           es_anticipo: boolean
           es_parcial: boolean
           estado_conciliacion: string
@@ -745,6 +1065,7 @@ export type Database = {
           archivo_justificante?: string | null
           cliente_id: string
           created_at?: string
+          empresa_id?: string | null
           es_anticipo?: boolean
           es_parcial?: boolean
           estado_conciliacion?: string
@@ -761,6 +1082,7 @@ export type Database = {
           archivo_justificante?: string | null
           cliente_id?: string
           created_at?: string
+          empresa_id?: string | null
           es_anticipo?: boolean
           es_parcial?: boolean
           estado_conciliacion?: string
@@ -782,6 +1104,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "pagos_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "pagos_factura_id_fkey"
             columns: ["factura_id"]
             isOneToOne: false
@@ -798,6 +1127,7 @@ export type Database = {
           codigo_barras: string | null
           costo_unitario: number
           created_at: string
+          empresa_id: string | null
           fecha_actualizacion: string
           id: string
           imagen: string | null
@@ -814,6 +1144,7 @@ export type Database = {
           codigo_barras?: string | null
           costo_unitario?: number
           created_at?: string
+          empresa_id?: string | null
           fecha_actualizacion?: string
           id?: string
           imagen?: string | null
@@ -830,6 +1161,7 @@ export type Database = {
           codigo_barras?: string | null
           costo_unitario?: number
           created_at?: string
+          empresa_id?: string | null
           fecha_actualizacion?: string
           id?: string
           imagen?: string | null
@@ -839,40 +1171,169 @@ export type Database = {
           proveedor?: string | null
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "productos_inventario_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
           created_at: string
           email: string
+          empresa_actual: string | null
           full_name: string | null
           id: string
+          rol: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
           created_at?: string
           email: string
+          empresa_actual?: string | null
           full_name?: string | null
           id?: string
+          rol?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
           created_at?: string
           email?: string
+          empresa_actual?: string | null
           full_name?: string | null
           id?: string
+          rol?: string | null
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_empresa_actual_fkey"
+            columns: ["empresa_actual"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      suscripciones_stripe: {
+        Row: {
+          cancel_at_period_end: boolean | null
+          created_at: string | null
+          empresa_id: string | null
+          estado: string
+          fecha_fin: string | null
+          fecha_inicio: string
+          id: string
+          metadatos: Json | null
+          periodo_actual_fin: string | null
+          periodo_actual_inicio: string | null
+          plan: string
+          precio_mensual: number | null
+          stripe_customer_id: string
+          stripe_subscription_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          cancel_at_period_end?: boolean | null
+          created_at?: string | null
+          empresa_id?: string | null
+          estado: string
+          fecha_fin?: string | null
+          fecha_inicio: string
+          id?: string
+          metadatos?: Json | null
+          periodo_actual_fin?: string | null
+          periodo_actual_inicio?: string | null
+          plan: string
+          precio_mensual?: number | null
+          stripe_customer_id: string
+          stripe_subscription_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          cancel_at_period_end?: boolean | null
+          created_at?: string | null
+          empresa_id?: string | null
+          estado?: string
+          fecha_fin?: string | null
+          fecha_inicio?: string
+          id?: string
+          metadatos?: Json | null
+          periodo_actual_fin?: string | null
+          periodo_actual_inicio?: string | null
+          plan?: string
+          precio_mensual?: number | null
+          stripe_customer_id?: string
+          stripe_subscription_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "suscripciones_stripe_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      usuarios_empresas: {
+        Row: {
+          activo: boolean | null
+          created_at: string | null
+          empresa_id: string | null
+          fecha_invitacion: string | null
+          id: string
+          invitado_por: string | null
+          rol: string | null
+          user_id: string | null
+        }
+        Insert: {
+          activo?: boolean | null
+          created_at?: string | null
+          empresa_id?: string | null
+          fecha_invitacion?: string | null
+          id?: string
+          invitado_por?: string | null
+          rol?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          activo?: boolean | null
+          created_at?: string | null
+          empresa_id?: string | null
+          fecha_invitacion?: string | null
+          id?: string
+          invitado_por?: string | null
+          rol?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "usuarios_empresas_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      activar_apps_default_empresa: {
+        Args: { p_empresa_id: string }
+        Returns: undefined
+      }
       calcular_hash_verifactu: {
         Args: {
           p_numero_factura: string
@@ -910,6 +1371,10 @@ export type Database = {
         Args: { orden_id_param: string }
         Returns: undefined
       }
+      empresa_has_app_active: {
+        Args: { p_empresa_id: string; p_app_codigo: string }
+        Returns: boolean
+      }
       generar_json_verifactu: {
         Args: { p_factura_id: string }
         Returns: Json
@@ -918,7 +1383,15 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      generar_numero_factura_saas: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       generar_numero_factura_verifactu: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      get_user_empresa_actual: {
         Args: Record<PropertyKey, never>
         Returns: string
       }
@@ -1010,6 +1483,25 @@ export type Database = {
           cliente_telefono: string
           archivo_pdf: string
           bicicleta_info: string
+        }[]
+      }
+      obtener_datos_factura_saas: {
+        Args: { p_factura_id: string }
+        Returns: {
+          numero_factura: string
+          fecha_factura: string
+          concepto: string
+          periodo_inicio: string
+          periodo_fin: string
+          importe_sin_iva: number
+          importe_iva: number
+          importe_total: number
+          empresa_nombre: string
+          empresa_cif: string
+          empresa_email: string
+          empresa_direccion: string
+          app_nombre: string
+          archivo_pdf: string
         }[]
       }
       obtener_datos_pago_justificante: {
@@ -1124,6 +1616,10 @@ export type Database = {
           p_metadatos?: Json
         }
         Returns: string
+      }
+      user_has_empresa_access: {
+        Args: { p_empresa_id: string }
+        Returns: boolean
       }
     }
     Enums: {

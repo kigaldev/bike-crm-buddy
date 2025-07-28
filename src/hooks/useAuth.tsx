@@ -9,7 +9,7 @@ interface UserProfile {
   user_id: string;
   email: string;
   full_name: string | null;
-  role: UserRole;
+  rol: string;
   empresa_actual: string | null;
   created_at: string;
   updated_at: string;
@@ -153,7 +153,7 @@ export function useAuth() {
       user_id: 'mock-user-id',
       email: 'admin@dev.local', 
       full_name: 'Admin Desarrollo',
-      role: 'admin' as UserRole,
+      rol: 'admin',
       empresa_actual: null, // Set to null to trigger onboarding
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
@@ -167,5 +167,5 @@ export function useAuth() {
 
 export function useCurrentUserRole(): UserRole | null {
   const { profile } = useAuth();
-  return profile?.role || null;
+  return (profile?.rol as UserRole) || null;
 }
