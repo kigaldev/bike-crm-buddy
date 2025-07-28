@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
+import { EmpresaProvider } from "@/hooks/useEmpresaContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Bicicletas from "./pages/Bicicletas";
@@ -20,30 +21,45 @@ import Logs from "./pages/Logs";
 import Analytics from "./pages/Analytics";
 import FinancialDashboard from "./pages/FinancialDashboard";
 import Auth from "./pages/Auth";
+import Onboarding from "./pages/Onboarding";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-// AUTH DISABLED - TEMPORAL: Allow access to all routes without auth
+// Protected app routes - require empresa_actual
 function ProtectedApp() {
+  const { profile, loading: authLoading } = useAuth();
+  
+  // If still loading auth, show loading
+  if (authLoading) {
+    return <div className="min-h-screen flex items-center justify-center">Cargando...</div>;
+  }
+  
+  // If no empresa_actual in profile, redirect to onboarding
+  if (!profile?.empresa_actual) {
+    return <Navigate to="/onboarding" replace />;
+  }
+
   return (
-    <Routes>
-      <Route path="/" element={<Index />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/bicicletas" element={<Bicicletas />} />
-      <Route path="/inventario" element={<Inventario />} />
-      <Route path="/alertas-stock" element={<AlertasStock />} />
-      <Route path="/ordenes" element={<OrdenesReparacion />} />
-      <Route path="/facturas" element={<Facturas />} />
-      <Route path="/pagos" element={<Pagos />} />
-      <Route path="/abonos" element={<Abonos />} />
-      <Route path="/alertas" element={<Alertas />} />
-      <Route path="/reportes" element={<Reportes />} />
-      <Route path="/logs" element={<Logs />} />
-      <Route path="/analytics" element={<Analytics />} />
-      <Route path="/financial-dashboard" element={<FinancialDashboard />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+    <EmpresaProvider>
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/bicicletas" element={<Bicicletas />} />
+        <Route path="/inventario" element={<Inventario />} />
+        <Route path="/alertas-stock" element={<AlertasStock />} />
+        <Route path="/ordenes" element={<OrdenesReparacion />} />
+        <Route path="/facturas" element={<Facturas />} />
+        <Route path="/pagos" element={<Pagos />} />
+        <Route path="/abonos" element={<Abonos />} />
+        <Route path="/alertas" element={<Alertas />} />
+        <Route path="/reportes" element={<Reportes />} />
+        <Route path="/logs" element={<Logs />} />
+        <Route path="/analytics" element={<Analytics />} />
+        <Route path="/financial-dashboard" element={<FinancialDashboard />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </EmpresaProvider>
   );
 }
 
@@ -56,6 +72,7 @@ const App = () => (
           <Sonner />
           <Routes>
             <Route path="/auth" element={<Auth />} />
+            <Route path="/onboarding" element={<Onboarding />} />
             <Route path="/*" element={<ProtectedApp />} />
           </Routes>
         </TooltipProvider>

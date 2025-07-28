@@ -10,6 +10,7 @@ interface UserProfile {
   email: string;
   full_name: string | null;
   role: UserRole;
+  empresa_actual: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -153,6 +154,7 @@ export function useAuth() {
       email: 'admin@dev.local', 
       full_name: 'Admin Desarrollo',
       role: 'admin' as UserRole,
+      empresa_actual: null, // Set to null to trigger onboarding
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     },

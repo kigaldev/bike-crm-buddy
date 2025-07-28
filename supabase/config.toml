@@ -1,4 +1,7 @@
 project_id = "udbcfwtgniqbupgeodga"
 
+[functions.create-empresa]
+verify_jwt = true
+
 [functions.generate-invoice-pdf]
 verify_jwt = false
