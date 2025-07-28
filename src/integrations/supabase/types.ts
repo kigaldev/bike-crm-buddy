@@ -135,6 +135,69 @@ export type Database = {
           },
         ]
       }
+      alertas: {
+        Row: {
+          created_at: string | null
+          descripcion: string
+          enviar_email: boolean | null
+          enviar_whatsapp: boolean | null
+          es_recurrente: boolean | null
+          estado: string
+          fecha_recordatorio: string
+          fecha_resolucion: string | null
+          frecuencia: string | null
+          id: string
+          id_entidad: string | null
+          log_envios: Json | null
+          notas: string | null
+          prioridad: string
+          resuelto_por: string | null
+          tipo: string
+          tipo_entidad: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          descripcion: string
+          enviar_email?: boolean | null
+          enviar_whatsapp?: boolean | null
+          es_recurrente?: boolean | null
+          estado?: string
+          fecha_recordatorio: string
+          fecha_resolucion?: string | null
+          frecuencia?: string | null
+          id?: string
+          id_entidad?: string | null
+          log_envios?: Json | null
+          notas?: string | null
+          prioridad?: string
+          resuelto_por?: string | null
+          tipo: string
+          tipo_entidad?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          descripcion?: string
+          enviar_email?: boolean | null
+          enviar_whatsapp?: boolean | null
+          es_recurrente?: boolean | null
+          estado?: string
+          fecha_recordatorio?: string
+          fecha_resolucion?: string | null
+          frecuencia?: string | null
+          id?: string
+          id_entidad?: string | null
+          log_envios?: Json | null
+          notas?: string | null
+          prioridad?: string
+          resuelto_por?: string | null
+          tipo?: string
+          tipo_entidad?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       bicicletas: {
         Row: {
           alias: string
@@ -831,6 +894,18 @@ export type Database = {
         Args: { orden_id_param: string }
         Returns: number
       }
+      crear_alerta_factura_vencida: {
+        Args: { p_factura_id: string; p_dias_vencimiento?: number }
+        Returns: string
+      }
+      crear_alerta_mantenimiento: {
+        Args: {
+          p_bicicleta_id: string
+          p_descripcion: string
+          p_meses_frecuencia?: number
+        }
+        Returns: string
+      }
       descontar_stock_orden: {
         Args: { orden_id_param: string }
         Returns: undefined
@@ -922,6 +997,10 @@ export type Database = {
           emisor_cif: string
           emisor_direccion: string
         }[]
+      }
+      procesar_alertas_vencidas: {
+        Args: Record<PropertyKey, never>
+        Returns: number
       }
       promote_user_to_admin: {
         Args: { user_email: string; user_full_name: string }
