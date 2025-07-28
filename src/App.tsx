@@ -22,6 +22,7 @@ import Analytics from "./pages/Analytics";
 import FinancialDashboard from "./pages/FinancialDashboard";
 import Auth from "./pages/Auth";
 import Onboarding from "./pages/Onboarding";
+import Usuarios from "./pages/Usuarios";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -57,6 +58,7 @@ function ProtectedApp() {
         <Route path="/logs" element={<Logs />} />
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/financial-dashboard" element={<FinancialDashboard />} />
+        <Route path="/usuarios" element={<Usuarios />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </EmpresaProvider>

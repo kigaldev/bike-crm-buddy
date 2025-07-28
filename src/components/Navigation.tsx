@@ -1,11 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Bike, Users, Calendar, DollarSign, BarChart3, LogOut, Package, Shield, TrendingUp, CreditCard, RotateCcw, Bell, FileBarChart } from "lucide-react";
+import { Bike, Users, Calendar, DollarSign, BarChart3, LogOut, Package, Shield, TrendingUp, CreditCard, RotateCcw, Bell, FileBarChart, UserCog } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useUsuariosEmpresa } from "@/hooks/useUsuariosEmpresa";
 
 export const Navigation = () => {
   const { profile, signOut } = useAuth();
+  const { canViewUsers } = useUsuariosEmpresa();
 
   const getRoleColor = (role: string) => {
     switch (role) {
@@ -95,6 +97,15 @@ export const Navigation = () => {
                 <span>Reportes</span>
               </Button>
             </Link>
+            
+            {canViewUsers && (
+              <Link to="/usuarios">
+                <Button variant="ghost" className="flex items-center space-x-2">
+                  <UserCog className="w-4 h-4" />
+                  <span>Usuarios</span>
+                </Button>
+              </Link>
+            )}
             
             {(profile?.role === 'admin' || profile?.role === 'auditor') && (
               <>
