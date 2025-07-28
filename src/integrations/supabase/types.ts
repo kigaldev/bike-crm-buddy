@@ -922,6 +922,37 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      obtener_analisis_alertas: {
+        Args: { p_fecha_inicio: string; p_fecha_fin: string }
+        Returns: {
+          total_alertas: number
+          alertas_resueltas: number
+          alertas_pendientes: number
+          alertas_criticas: number
+          ratio_resolucion: number
+          tipo_mas_frecuente: string
+        }[]
+      }
+      obtener_analisis_inventario: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          total_productos: number
+          valor_total_inventario: number
+          productos_stock_bajo: number
+          productos_sin_stock: number
+          categoria_mayor_valor: string
+          producto_mayor_rotacion: string
+        }[]
+      }
+      obtener_analisis_metodos_pago: {
+        Args: { p_fecha_inicio: string; p_fecha_fin: string }
+        Returns: {
+          metodo_pago: string
+          total_monto: number
+          numero_pagos: number
+          porcentaje: number
+        }[]
+      }
       obtener_datos_abono_completo: {
         Args: { p_abono_id: string }
         Returns: {
@@ -996,6 +1027,51 @@ export type Database = {
           emisor_nombre: string
           emisor_cif: string
           emisor_direccion: string
+        }[]
+      }
+      obtener_facturacion_mensual: {
+        Args: { p_ano?: number }
+        Returns: {
+          mes: number
+          mes_nombre: string
+          total_facturado: number
+          total_cobrado: number
+          numero_facturas: number
+          numero_ordenes: number
+        }[]
+      }
+      obtener_resumen_financiero: {
+        Args: { p_fecha_inicio: string; p_fecha_fin: string }
+        Returns: {
+          total_facturado: number
+          total_cobrado: number
+          total_abonos: number
+          total_pendiente: number
+          numero_ordenes: number
+          numero_facturas: number
+          numero_clientes: number
+          ticket_promedio: number
+        }[]
+      }
+      obtener_tiempo_promedio_reparacion: {
+        Args: { p_fecha_inicio: string; p_fecha_fin: string }
+        Returns: {
+          tiempo_promedio_dias: number
+          ordenes_analizadas: number
+          tiempo_minimo_dias: number
+          tiempo_maximo_dias: number
+        }[]
+      }
+      obtener_top_clientes: {
+        Args: { p_fecha_inicio: string; p_fecha_fin: string; p_limite?: number }
+        Returns: {
+          cliente_id: string
+          nombre_completo: string
+          total_facturado: number
+          total_pagado: number
+          numero_ordenes: number
+          numero_facturas: number
+          ultima_factura: string
         }[]
       }
       procesar_alertas_vencidas: {

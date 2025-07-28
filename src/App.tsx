@@ -15,6 +15,7 @@ import Abonos from "./pages/Abonos";
 import OrdenesReparacion from "./pages/OrdenesReparacion";
 import Dashboard from "./pages/Dashboard";
 import Alertas from "./pages/Alertas";
+import Reportes from "./pages/Reportes";
 import Logs from "./pages/Logs";
 import Analytics from "./pages/Analytics";
 import FinancialDashboard from "./pages/FinancialDashboard";
@@ -37,6 +38,7 @@ function ProtectedApp() {
       <Route path="/pagos" element={<Pagos />} />
       <Route path="/abonos" element={<Abonos />} />
       <Route path="/alertas" element={<Alertas />} />
+      <Route path="/reportes" element={<Reportes />} />
       <Route path="/logs" element={<Logs />} />
       <Route path="/analytics" element={<Analytics />} />
       <Route path="/financial-dashboard" element={<FinancialDashboard />} />
