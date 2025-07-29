@@ -26,6 +26,7 @@ import Onboarding from "./pages/Onboarding";
 import Usuarios from "./pages/Usuarios";
 import FacturasSaas from "./pages/FacturasSaas";
 import UsoApps from "./pages/UsoApps";
+import Feedback from "./pages/Feedback";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -65,6 +66,7 @@ function ProtectedApp() {
         <Route path="/usuarios" element={<Usuarios />} />
         <Route path="/facturas-saas" element={<FacturasSaas />} />
         <Route path="/uso-apps" element={<UsoApps />} />
+        <Route path="/feedback" element={<Feedback />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </EmpresaProvider>

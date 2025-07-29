@@ -777,6 +777,54 @@ export type Database = {
         }
         Relationships: []
       }
+      feedback_saas: {
+        Row: {
+          app_relacionada: string | null
+          created_at: string
+          descripcion: string
+          empresa_id: string
+          estado: string
+          id: string
+          prioridad: string
+          respuesta_admin: string | null
+          resuelto_por: string | null
+          tipo: string
+          titulo: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          app_relacionada?: string | null
+          created_at?: string
+          descripcion: string
+          empresa_id: string
+          estado?: string
+          id?: string
+          prioridad?: string
+          respuesta_admin?: string | null
+          resuelto_por?: string | null
+          tipo: string
+          titulo: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          app_relacionada?: string | null
+          created_at?: string
+          descripcion?: string
+          empresa_id?: string
+          estado?: string
+          id?: string
+          prioridad?: string
+          respuesta_admin?: string | null
+          resuelto_por?: string | null
+          tipo?: string
+          titulo?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       firmas_log: {
         Row: {
           accion: string
@@ -1572,6 +1620,16 @@ export type Database = {
           emisor_direccion: string
         }[]
       }
+      obtener_estadisticas_feedback_empresa: {
+        Args: { p_empresa_id: string }
+        Returns: {
+          total_feedback: number
+          por_estado: Json
+          por_tipo: Json
+          por_app: Json
+          feedback_reciente: number
+        }[]
+      }
       obtener_estadisticas_uso_empresa: {
         Args: { p_empresa_id: string }
         Returns: {
@@ -1593,6 +1651,16 @@ export type Database = {
           total_cobrado: number
           numero_facturas: number
           numero_ordenes: number
+        }[]
+      }
+      obtener_feedback_por_app: {
+        Args: { p_empresa_id: string; p_app_codigo: string }
+        Returns: {
+          total: number
+          pendientes: number
+          implementados: number
+          ultimo_feedback: string
+          feedback_reciente: Json
         }[]
       }
       obtener_resumen_financiero: {
