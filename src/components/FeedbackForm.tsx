@@ -59,7 +59,7 @@ export function FeedbackForm({ onSuccess, appInicial }: FeedbackFormProps) {
       tipo: '',
       titulo: '',
       descripcion: '',
-      app_relacionada: appInicial || '',
+      app_relacionada: appInicial || 'general',
     },
   });
 
@@ -83,7 +83,7 @@ export function FeedbackForm({ onSuccess, appInicial }: FeedbackFormProps) {
           tipo: values.tipo,
           titulo: values.titulo,
           descripcion: values.descripcion,
-          app_relacionada: values.app_relacionada || null,
+          app_relacionada: values.app_relacionada === 'general' ? null : values.app_relacionada,
         });
 
       if (error) throw error;
@@ -164,7 +164,7 @@ export function FeedbackForm({ onSuccess, appInicial }: FeedbackFormProps) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="">General / No específica</SelectItem>
+                      <SelectItem value="general">General / No específica</SelectItem>
                       {appsDisponibles.map((app) => (
                         <SelectItem key={app.codigo} value={app.codigo}>
                           {app.nombre}
