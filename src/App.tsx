@@ -35,13 +35,16 @@ const queryClient = new QueryClient();
 function ProtectedApp() {
   const { profile, loading: authLoading } = useAuth();
   
+  // TEMPORAL: Flag para desactivar requerimiento de onboarding
+  const DISABLE_ONBOARDING_TEMP = true;
+  
   // If still loading auth, show loading
   if (authLoading) {
     return <div className="min-h-screen flex items-center justify-center">Cargando...</div>;
   }
   
-  // If no empresa_actual in profile, redirect to onboarding
-  if (!profile?.empresa_actual) {
+  // If no empresa_actual in profile, redirect to onboarding (unless disabled temporarily)
+  if (!DISABLE_ONBOARDING_TEMP && !profile?.empresa_actual) {
     return <Navigate to="/onboarding" replace />;
   }
 
