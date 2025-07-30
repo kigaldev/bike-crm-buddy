@@ -345,6 +345,44 @@ export type Database = {
           },
         ]
       }
+      branding_empresas: {
+        Row: {
+          color_primario: string | null
+          color_secundario: string | null
+          empresa_id: string
+          logo_url: string | null
+          modo_oscuro: boolean | null
+          tipografia_base: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          color_primario?: string | null
+          color_secundario?: string | null
+          empresa_id: string
+          logo_url?: string | null
+          modo_oscuro?: boolean | null
+          tipografia_base?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          color_primario?: string | null
+          color_secundario?: string | null
+          empresa_id?: string
+          logo_url?: string | null
+          modo_oscuro?: boolean | null
+          tipografia_base?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "branding_empresas_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: true
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clientes: {
         Row: {
           apellidos: string
@@ -1415,6 +1453,16 @@ export type Database = {
         Args: { p_empresa_id: string }
         Returns: undefined
       }
+      actualizar_branding_empresa: {
+        Args: {
+          p_logo_url?: string
+          p_color_primario?: string
+          p_color_secundario?: string
+          p_tipografia_base?: string
+          p_modo_oscuro?: boolean
+        }
+        Returns: Json
+      }
       calcular_hash_verifactu: {
         Args: {
           p_numero_factura: string
@@ -1523,6 +1571,18 @@ export type Database = {
           app_nombre: string
           ultimo_uso: string
           dias_sin_uso: number
+        }[]
+      }
+      obtener_branding_empresa_actual: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          empresa_id: string
+          logo_url: string
+          color_primario: string
+          color_secundario: string
+          tipografia_base: string
+          modo_oscuro: boolean
+          updated_at: string
         }[]
       }
       obtener_datos_abono_completo: {

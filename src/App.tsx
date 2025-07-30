@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { EmpresaProvider } from "@/hooks/useEmpresaContext";
+import { BrandingProvider } from "@/hooks/useBranding";
 import { AppUsageMiddleware } from "@/components/AppUsageMiddleware";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
@@ -27,6 +28,7 @@ import Usuarios from "./pages/Usuarios";
 import FacturasSaas from "./pages/FacturasSaas";
 import UsoApps from "./pages/UsoApps";
 import Feedback from "./pages/Feedback";
+import BrandingConfig from "./pages/BrandingConfig";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -50,8 +52,9 @@ function ProtectedApp() {
 
   return (
     <EmpresaProvider>
-      <AppUsageMiddleware />
-      <Routes>
+      <BrandingProvider>
+        <AppUsageMiddleware />
+        <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/bicicletas" element={<Bicicletas />} />
@@ -70,8 +73,10 @@ function ProtectedApp() {
         <Route path="/facturas-saas" element={<FacturasSaas />} />
         <Route path="/uso-apps" element={<UsoApps />} />
         <Route path="/feedback" element={<Feedback />} />
+        <Route path="/branding" element={<BrandingConfig />} />
         <Route path="*" element={<NotFound />} />
-      </Routes>
+        </Routes>
+      </BrandingProvider>
     </EmpresaProvider>
   );
 }

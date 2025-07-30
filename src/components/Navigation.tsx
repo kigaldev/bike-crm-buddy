@@ -1,13 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Bike, Users, Calendar, DollarSign, BarChart3, LogOut, Package, Shield, TrendingUp, CreditCard, RotateCcw, Bell, FileBarChart, UserCog, MessageSquarePlus } from "lucide-react";
+import { Bike, Users, Calendar, DollarSign, BarChart3, LogOut, Package, Shield, TrendingUp, CreditCard, RotateCcw, Bell, FileBarChart, UserCog, MessageSquarePlus, Palette } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useUsuariosEmpresa } from "@/hooks/useUsuariosEmpresa";
+import { useBranding } from "@/hooks/useBranding";
 
 export const Navigation = () => {
   const { profile, signOut } = useAuth();
   const { canViewUsers } = useUsuariosEmpresa();
+  const { branding } = useBranding();
 
   const getRoleColor = (role: string) => {
     switch (role) {
@@ -23,8 +25,28 @@ export const Navigation = () => {
     <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center space-x-2">
-            <h1 className="text-2xl font-bold">CRM Taller Bicicletas</h1>
+          <Link to="/" className="flex items-center space-x-3">
+            {branding?.logo_url ? (
+              <img 
+                src={branding.logo_url} 
+                alt="Logo" 
+                className="h-8 w-auto object-contain"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
+              />
+            ) : (
+              <Bike className="h-8 w-8 text-primary" />
+            )}
+            <h1 
+              className="text-2xl font-bold"
+              style={{ 
+                color: branding?.color_primario || undefined,
+                fontFamily: branding?.tipografia_base || undefined 
+              }}
+            >
+              CRM Taller Bicicletas
+            </h1>
           </Link>
           
           <div className="flex items-center space-x-4">
@@ -141,10 +163,16 @@ export const Navigation = () => {
                      <span>Uso Apps</span>
                    </Button>
                  </Link>
-                 <Link to="/financial-dashboard">
+                  <Link to="/financial-dashboard">
                    <Button variant="ghost" className="flex items-center space-x-2">
                      <BarChart3 className="w-4 h-4" />
                      <span>Dashboard Financiero</span>
+                   </Button>
+                 </Link>
+                 <Link to="/branding">
+                   <Button variant="ghost" className="flex items-center space-x-2">
+                     <Palette className="w-4 h-4" />
+                     <span>Branding</span>
                    </Button>
                  </Link>
               </>
