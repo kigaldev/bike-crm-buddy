@@ -999,6 +999,48 @@ export type Database = {
           },
         ]
       }
+      notificaciones_saas: {
+        Row: {
+          created_at: string
+          empresa_id: string
+          enviado_email: boolean
+          id: string
+          mensaje: string
+          tipo: string
+          titulo: string
+          updated_at: string
+          url_redireccion: string | null
+          user_id: string
+          visto: boolean
+        }
+        Insert: {
+          created_at?: string
+          empresa_id: string
+          enviado_email?: boolean
+          id?: string
+          mensaje: string
+          tipo: string
+          titulo: string
+          updated_at?: string
+          url_redireccion?: string | null
+          user_id: string
+          visto?: boolean
+        }
+        Update: {
+          created_at?: string
+          empresa_id?: string
+          enviado_email?: boolean
+          id?: string
+          mensaje?: string
+          tipo?: string
+          titulo?: string
+          updated_at?: string
+          url_redireccion?: string | null
+          user_id?: string
+          visto?: boolean
+        }
+        Relationships: []
+      }
       orden_productos: {
         Row: {
           cantidad: number
@@ -1524,6 +1566,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      marcar_notificacion_vista: {
+        Args: { p_notificacion_id: string }
+        Returns: boolean
+      }
       obtener_actividad_diaria_empresa: {
         Args: { p_empresa_id: string; p_dias?: number }
         Returns: {
@@ -1688,6 +1734,16 @@ export type Database = {
           por_tipo: Json
           por_app: Json
           feedback_reciente: number
+        }[]
+      }
+      obtener_estadisticas_notificaciones: {
+        Args: { p_empresa_id: string }
+        Returns: {
+          total_notificaciones: number
+          notificaciones_vistas: number
+          notificaciones_no_vistas: number
+          por_tipo: Json
+          recientes_7_dias: number
         }[]
       }
       obtener_estadisticas_uso_empresa: {

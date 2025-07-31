@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useUsuariosEmpresa } from "@/hooks/useUsuariosEmpresa";
 import { useBranding } from "@/hooks/useBranding";
+import { NotificationBell } from "@/components/NotificationBell";
 
 export const Navigation = () => {
   const { profile, signOut } = useAuth();
@@ -177,6 +178,8 @@ export const Navigation = () => {
                  </Link>
               </>
             )}
+            
+            <NotificationBell />
             
             {profile && (
               <div className="flex items-center space-x-3 ml-4 pl-4 border-l">
