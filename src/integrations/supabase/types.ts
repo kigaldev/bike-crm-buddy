@@ -433,6 +433,45 @@ export type Database = {
           },
         ]
       }
+      config_apps_empresa: {
+        Row: {
+          activa: boolean
+          app_codigo: string
+          configuracion_personalizada: Json | null
+          created_at: string | null
+          empresa_id: string
+          id: string
+          limite_uso_mensual: number | null
+          modo_demo: boolean
+          restricciones: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          activa?: boolean
+          app_codigo: string
+          configuracion_personalizada?: Json | null
+          created_at?: string | null
+          empresa_id: string
+          id?: string
+          limite_uso_mensual?: number | null
+          modo_demo?: boolean
+          restricciones?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          activa?: boolean
+          app_codigo?: string
+          configuracion_personalizada?: Json | null
+          created_at?: string | null
+          empresa_id?: string
+          id?: string
+          limite_uso_mensual?: number | null
+          modo_demo?: boolean
+          restricciones?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       empresas: {
         Row: {
           cif: string | null
@@ -1538,6 +1577,10 @@ export type Database = {
         }
         Returns: Json
       }
+      actualizar_config_app_empresa: {
+        Args: { p_app_codigo: string; p_configuracion: Json }
+        Returns: Json
+      }
       calcular_hash_verifactu: {
         Args: {
           p_numero_factura: string
@@ -1667,6 +1710,10 @@ export type Database = {
           modo_oscuro: boolean
           updated_at: string
         }[]
+      }
+      obtener_config_app_empresa: {
+        Args: { p_app_codigo: string }
+        Returns: Json
       }
       obtener_datos_abono_completo: {
         Args: { p_abono_id: string }
@@ -1836,6 +1883,20 @@ export type Database = {
           ordenes_analizadas: number
           tiempo_minimo_dias: number
           tiempo_maximo_dias: number
+        }[]
+      }
+      obtener_todas_config_apps_empresa: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          app_codigo: string
+          app_nombre: string
+          app_descripcion: string
+          activa: boolean
+          limite_uso_mensual: number
+          restricciones: Json
+          modo_demo: boolean
+          configuracion_personalizada: Json
+          updated_at: string
         }[]
       }
       obtener_top_clientes: {

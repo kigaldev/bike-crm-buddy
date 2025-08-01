@@ -30,6 +30,7 @@ import UsoApps from "./pages/UsoApps";
 import Feedback from "./pages/Feedback";
 import BrandingConfig from "./pages/BrandingConfig";
 import PermisosConfig from "./pages/PermisosConfig";
+import ConfigApps from "./pages/ConfigApps";
 import Notificaciones from "./pages/Notificaciones";
 import NotFound from "./pages/NotFound";
 
@@ -77,6 +78,7 @@ function ProtectedApp() {
         <Route path="/feedback" element={<Feedback />} />
         <Route path="/branding" element={<BrandingConfig />} />
         <Route path="/permisos" element={<PermisosConfig />} />
+        <Route path="/config-apps" element={<ConfigApps />} />
         <Route path="/notificaciones" element={<Notificaciones />} />
         <Route path="*" element={<NotFound />} />
         </Routes>

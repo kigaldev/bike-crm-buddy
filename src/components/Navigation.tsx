@@ -179,10 +179,18 @@ export const Navigation = () => {
                 </Button>
               </Link>
             </PermissionGuard>
-                 <PermissionGuard recurso="usuarios" accion="editar">
-                   <Link to="/permisos">
-                     <Button variant="ghost" className="flex items-center space-x-2">
-                       <Settings className="w-4 h-4" />
+            <PermissionGuard recurso="apps" accion="editar">
+              <Link to="/config-apps">
+                <Button variant="ghost" className="flex items-center space-x-2">
+                  <Settings className="w-4 h-4" />
+                  <span>Config Apps</span>
+                </Button>
+              </Link>
+            </PermissionGuard>
+            <PermissionGuard recurso="usuarios" accion="editar">
+              <Link to="/permisos">
+                <Button variant="ghost" className="flex items-center space-x-2">
+                  <Shield className="w-4 h-4" />
                        <span>Permisos</span>
                      </Button>
                    </Link>
