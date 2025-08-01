@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Bike, Users, Calendar, DollarSign, BarChart3, LogOut, Package, Shield, TrendingUp, CreditCard, RotateCcw, Bell, FileBarChart, UserCog, MessageSquarePlus, Palette } from "lucide-react";
+import { Bike, Users, Calendar, DollarSign, BarChart3, LogOut, Package, Shield, TrendingUp, CreditCard, RotateCcw, Bell, FileBarChart, UserCog, MessageSquarePlus, Palette, Settings } from "lucide-react";
+import { PermissionGuard } from "@/components/PermissionGuard";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useUsuariosEmpresa } from "@/hooks/useUsuariosEmpresa";
@@ -135,14 +136,14 @@ export const Navigation = () => {
               </Button>
             </Link>
             
-            {canViewUsers && (
+            <PermissionGuard recurso="usuarios" accion="ver">
               <Link to="/usuarios">
                 <Button variant="ghost" className="flex items-center space-x-2">
                   <UserCog className="w-4 h-4" />
                   <span>Usuarios</span>
                 </Button>
               </Link>
-            )}
+            </PermissionGuard>
             
             {(profile?.rol === 'admin' || profile?.rol === 'auditor') && (
               <>
@@ -170,12 +171,22 @@ export const Navigation = () => {
                      <span>Dashboard Financiero</span>
                    </Button>
                  </Link>
-                 <Link to="/branding">
-                   <Button variant="ghost" className="flex items-center space-x-2">
-                     <Palette className="w-4 h-4" />
-                     <span>Branding</span>
-                   </Button>
-                 </Link>
+            <PermissionGuard recurso="branding" accion="ver">
+              <Link to="/branding">
+                <Button variant="ghost" className="flex items-center space-x-2">
+                  <Palette className="w-4 h-4" />
+                  <span>Branding</span>
+                </Button>
+              </Link>
+            </PermissionGuard>
+                 <PermissionGuard recurso="usuarios" accion="editar">
+                   <Link to="/permisos">
+                     <Button variant="ghost" className="flex items-center space-x-2">
+                       <Settings className="w-4 h-4" />
+                       <span>Permisos</span>
+                     </Button>
+                   </Link>
+                 </PermissionGuard>
               </>
             )}
             

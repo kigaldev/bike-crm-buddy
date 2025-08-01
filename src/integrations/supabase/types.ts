@@ -1247,6 +1247,39 @@ export type Database = {
           },
         ]
       }
+      permisos_roles_empresa: {
+        Row: {
+          accion: string
+          created_at: string | null
+          empresa_id: string
+          id: string
+          permitido: boolean
+          recurso: string
+          rol: string
+          updated_at: string | null
+        }
+        Insert: {
+          accion: string
+          created_at?: string | null
+          empresa_id: string
+          id?: string
+          permitido?: boolean
+          recurso: string
+          rol: string
+          updated_at?: string | null
+        }
+        Update: {
+          accion?: string
+          created_at?: string | null
+          empresa_id?: string
+          id?: string
+          permitido?: boolean
+          recurso?: string
+          rol?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       productos_inventario: {
         Row: {
           cantidad_actual: number
@@ -1566,6 +1599,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      insertar_permisos_default_empresa: {
+        Args: { p_empresa_id: string }
+        Returns: undefined
+      }
       marcar_notificacion_vista: {
         Args: { p_notificacion_id: string }
         Returns: boolean
@@ -1870,6 +1907,10 @@ export type Database = {
       }
       user_has_empresa_access: {
         Args: { p_empresa_id: string }
+        Returns: boolean
+      }
+      verificar_permiso_usuario: {
+        Args: { p_recurso: string; p_accion: string }
         Returns: boolean
       }
     }
