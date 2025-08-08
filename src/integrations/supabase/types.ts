@@ -994,6 +994,39 @@ export type Database = {
           },
         ]
       }
+      logs_tests_empresa: {
+        Row: {
+          created_at: string
+          empresa_id: string
+          error_stack: string | null
+          estado: string
+          id: string
+          mensaje: string | null
+          test_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          empresa_id: string
+          error_stack?: string | null
+          estado: string
+          id?: string
+          mensaje?: string | null
+          test_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          empresa_id?: string
+          error_stack?: string | null
+          estado?: string
+          id?: string
+          mensaje?: string | null
+          test_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       notificaciones_log: {
         Row: {
           created_at: string | null
@@ -1484,6 +1517,42 @@ export type Database = {
           },
         ]
       }
+      tests_empresa: {
+        Row: {
+          activo: boolean
+          codigo: string
+          created_at: string
+          descripcion: string | null
+          empresa_id: string
+          id: string
+          nombre: string
+          tipo: string
+          updated_at: string
+        }
+        Insert: {
+          activo?: boolean
+          codigo: string
+          created_at?: string
+          descripcion?: string | null
+          empresa_id: string
+          id?: string
+          nombre: string
+          tipo: string
+          updated_at?: string
+        }
+        Update: {
+          activo?: boolean
+          codigo?: string
+          created_at?: string
+          descripcion?: string | null
+          empresa_id?: string
+          id?: string
+          nombre?: string
+          tipo?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       uso_apps_empresa: {
         Row: {
           app_codigo: string
@@ -1617,6 +1686,10 @@ export type Database = {
       descontar_stock_orden: {
         Args: { orden_id_param: string }
         Returns: undefined
+      }
+      ejecutar_test: {
+        Args: { codigo_test: string }
+        Returns: Json
       }
       empresa_has_app_active: {
         Args: { p_empresa_id: string; p_app_codigo: string }
@@ -1863,6 +1936,19 @@ export type Database = {
           feedback_reciente: Json
         }[]
       }
+      obtener_logs_test: {
+        Args: { p_test_id: string }
+        Returns: {
+          id: string
+          test_id: string
+          empresa_id: string
+          user_id: string
+          estado: string
+          mensaje: string
+          error_stack: string
+          created_at: string
+        }[]
+      }
       obtener_resumen_financiero: {
         Args: { p_fecha_inicio: string; p_fecha_fin: string }
         Returns: {
@@ -1874,6 +1960,20 @@ export type Database = {
           numero_facturas: number
           numero_clientes: number
           ticket_promedio: number
+        }[]
+      }
+      obtener_tests_disponibles: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          empresa_id: string
+          nombre: string
+          descripcion: string
+          codigo: string
+          tipo: string
+          activo: boolean
+          created_at: string
+          updated_at: string
         }[]
       }
       obtener_tiempo_promedio_reparacion: {

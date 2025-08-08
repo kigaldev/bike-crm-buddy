@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Bike, Users, Calendar, DollarSign, BarChart3, LogOut, Package, Shield, TrendingUp, CreditCard, RotateCcw, Bell, FileBarChart, UserCog, MessageSquarePlus, Palette, Settings } from "lucide-react";
+import { Bike, Users, Calendar, DollarSign, BarChart3, LogOut, Package, Shield, TrendingUp, CreditCard, RotateCcw, Bell, FileBarChart, UserCog, MessageSquarePlus, Palette, Settings, Beaker } from "lucide-react";
 import { PermissionGuard } from "@/components/PermissionGuard";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -10,7 +10,7 @@ import { NotificationBell } from "@/components/NotificationBell";
 
 export const Navigation = () => {
   const { profile, signOut } = useAuth();
-  const { canViewUsers } = useUsuariosEmpresa();
+  const { canViewUsers, currentUserRole } = useUsuariosEmpresa();
   const { branding } = useBranding();
 
   const getRoleColor = (role: string) => {
@@ -19,6 +19,7 @@ export const Navigation = () => {
       case 'tecnico': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
       case 'recepcion': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
       case 'auditor': return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200';
+      case 'qa': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
       default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
     }
   };
@@ -135,6 +136,15 @@ export const Navigation = () => {
                 <span>Feedback</span>
               </Button>
             </Link>
+
+            {(currentUserRole === 'admin' || currentUserRole === 'qa') && (
+              <Link to="/test-interno">
+                <Button variant="ghost" className="flex items-center space-x-2">
+                  <Beaker className="w-4 h-4" />
+                  <span>Test Interno</span>
+                </Button>
+              </Link>
+            )}
             
             <PermissionGuard recurso="usuarios" accion="ver">
               <Link to="/usuarios">

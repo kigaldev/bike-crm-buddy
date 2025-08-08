@@ -32,6 +32,7 @@ import BrandingConfig from "./pages/BrandingConfig";
 import PermisosConfig from "./pages/PermisosConfig";
 import ConfigApps from "./pages/ConfigApps";
 import Notificaciones from "./pages/Notificaciones";
+import TestInterno from "./pages/TestInterno";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -80,6 +81,7 @@ function ProtectedApp() {
         <Route path="/permisos" element={<PermisosConfig />} />
         <Route path="/config-apps" element={<ConfigApps />} />
         <Route path="/notificaciones" element={<Notificaciones />} />
+        <Route path="/test-interno" element={<TestInterno />} />
         <Route path="*" element={<NotFound />} />
         </Routes>
       </BrandingProvider>

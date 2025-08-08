@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 import { useEmpresa } from './useEmpresaContext';
 
-export type RolEmpresa = 'admin' | 'manager' | 'tecnico' | 'usuario';
+export type RolEmpresa = 'admin' | 'manager' | 'tecnico' | 'usuario' | 'qa';
 
 export interface UsuarioEmpresa {
   id: string;
