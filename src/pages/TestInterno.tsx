@@ -3,11 +3,14 @@ import { TestRunnerList } from '@/components/TestRunnerList';
 import { TestLogViewer } from '@/components/TestLogViewer';
 import { useUsuariosEmpresa } from '@/hooks/useUsuariosEmpresa';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Shield } from 'lucide-react';
+import { Shield, Sparkles } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useTestRunner } from '@/hooks/useTestRunner';
 
 export default function TestInterno() {
   const { currentUserRole, loading } = useUsuariosEmpresa();
   const [selectedTestId, setSelectedTestId] = useState<string | undefined>();
+  const { preloadDemoTests } = useTestRunner();
 
   useEffect(() => {
     document.title = 'Testing interno | CRM Taller Bicicletas';
@@ -43,7 +46,12 @@ export default function TestInterno() {
 
   return (
     <main className="container mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-2">Testing interno</h1>
+      <div className="flex items-center justify-between mb-2">
+        <h1 className="text-2xl font-bold">Testing interno</h1>
+        <Button size="sm" variant="secondary" onClick={preloadDemoTests}>
+          <Sparkles className="w-4 h-4 mr-2" /> Precargar tests demo
+        </Button>
+      </div>
       <p className="text-muted-foreground mb-6">Ejecuta tests y consulta los resultados por empresa.</p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

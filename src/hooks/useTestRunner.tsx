@@ -80,5 +80,20 @@ export function useTestRunner() {
     }
   }, [toast]);
 
-  return useMemo(() => ({ tests, loadingTests, fetchTests, runTest, getLogs }), [tests, loadingTests, fetchTests, runTest, getLogs]);
+  const preloadDemoTests = useCallback(async () => {
+    try {
+      const { data, error } = await (supabase as any).rpc('precargar_tests_demo');
+      if (error) throw error;
+      const inserted = data?.inserted ?? 0;
+      toast({ title: 'Precarga completada', description: `${inserted} test(s) insertados` });
+      await fetchTests();
+      return data;
+    } catch (err: any) {
+      console.error('Error precargando tests:', err);
+      toast({ title: 'No se pudo precargar', description: err.message || 'Intenta nuevamente', variant: 'destructive' });
+      return null;
+    }
+  }, [toast, fetchTests]);
+
+  return useMemo(() => ({ tests, loadingTests, fetchTests, runTest, getLogs, preloadDemoTests }), [tests, loadingTests, fetchTests, runTest, getLogs, preloadDemoTests]);
 }

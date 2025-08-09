@@ -857,6 +857,7 @@ export type Database = {
       feedback_saas: {
         Row: {
           app_relacionada: string | null
+          contexto_app: string | null
           created_at: string
           descripcion: string
           empresa_id: string
@@ -869,9 +870,11 @@ export type Database = {
           titulo: string
           updated_at: string
           user_id: string
+          visibilidad_admin: boolean | null
         }
         Insert: {
           app_relacionada?: string | null
+          contexto_app?: string | null
           created_at?: string
           descripcion: string
           empresa_id: string
@@ -884,9 +887,11 @@ export type Database = {
           titulo: string
           updated_at?: string
           user_id: string
+          visibilidad_admin?: boolean | null
         }
         Update: {
           app_relacionada?: string | null
+          contexto_app?: string | null
           created_at?: string
           descripcion?: string
           empresa_id?: string
@@ -899,6 +904,7 @@ export type Database = {
           titulo?: string
           updated_at?: string
           user_id?: string
+          visibilidad_admin?: boolean | null
         }
         Relationships: []
       }
@@ -1695,6 +1701,16 @@ export type Database = {
         Args: { p_empresa_id: string; p_app_codigo: string }
         Returns: boolean
       }
+      enviar_feedback_empresa: {
+        Args: {
+          p_tipo: string
+          p_mensaje: string
+          p_contexto_app?: string
+          p_titulo?: string
+          p_visibilidad_admin?: boolean
+        }
+        Returns: string
+      }
       generar_json_verifactu: {
         Args: { p_factura_id: string }
         Returns: Json
@@ -1926,6 +1942,26 @@ export type Database = {
           numero_ordenes: number
         }[]
       }
+      obtener_feedback_empresa: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          app_relacionada: string | null
+          contexto_app: string | null
+          created_at: string
+          descripcion: string
+          empresa_id: string
+          estado: string
+          id: string
+          prioridad: string
+          respuesta_admin: string | null
+          resuelto_por: string | null
+          tipo: string
+          titulo: string
+          updated_at: string
+          user_id: string
+          visibilidad_admin: boolean | null
+        }[]
+      }
       obtener_feedback_por_app: {
         Args: { p_empresa_id: string; p_app_codigo: string }
         Returns: {
@@ -2011,6 +2047,10 @@ export type Database = {
           ultima_factura: string
         }[]
       }
+      precargar_tests_demo: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
       procesar_alertas_vencidas: {
         Args: Record<PropertyKey, never>
         Returns: number
@@ -2065,6 +2105,15 @@ export type Database = {
       registrar_uso_app: {
         Args: { p_app_codigo: string; p_tipo_accion: string; p_metadata?: Json }
         Returns: string
+      }
+      responder_feedback_admin: {
+        Args: {
+          p_feedback_id: string
+          p_respuesta: string
+          p_estado?: string
+          p_visibilidad_admin?: boolean
+        }
+        Returns: boolean
       }
       user_has_empresa_access: {
         Args: { p_empresa_id: string }
