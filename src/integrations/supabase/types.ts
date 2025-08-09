@@ -950,6 +950,42 @@ export type Database = {
         }
         Relationships: []
       }
+      incidencias_saas: {
+        Row: {
+          created_at: string
+          detalle: string | null
+          empresa_id: string
+          estado: string
+          id: string
+          severidad: string
+          test_codigo: string
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          detalle?: string | null
+          empresa_id: string
+          estado?: string
+          id?: string
+          severidad?: string
+          test_codigo: string
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          detalle?: string | null
+          empresa_id?: string
+          estado?: string
+          id?: string
+          severidad?: string
+          test_codigo?: string
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       logs: {
         Row: {
           created_at: string
@@ -1656,6 +1692,10 @@ export type Database = {
         Args: { p_app_codigo: string; p_configuracion: Json }
         Returns: Json
       }
+      actualizar_estado_incidencia: {
+        Args: { p_id: string; p_estado: string }
+        Returns: boolean
+      }
       calcular_hash_verifactu: {
         Args: {
           p_numero_factura: string
@@ -1686,6 +1726,15 @@ export type Database = {
           p_bicicleta_id: string
           p_descripcion: string
           p_meses_frecuencia?: number
+        }
+        Returns: string
+      }
+      crear_incidencia: {
+        Args: {
+          p_test_codigo: string
+          p_titulo: string
+          p_detalle: string
+          p_severidad?: string
         }
         Returns: string
       }

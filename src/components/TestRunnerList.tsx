@@ -10,9 +10,10 @@ import { useToast } from '@/hooks/use-toast';
 
 interface TestRunnerListProps {
   onSelect?: (test: TestItem) => void;
+  onFailure?: (test: TestItem, errorMsg: string) => void;
 }
 
-export function TestRunnerList({ onSelect }: TestRunnerListProps) {
+export function TestRunnerList({ onSelect, onFailure }: TestRunnerListProps) {
   const { tests, loadingTests, fetchTests, runTest, getLogs } = useTestRunner();
   const [query, setQuery] = useState('');
   const [runningAll, setRunningAll] = useState(false);
@@ -100,7 +101,12 @@ export function TestRunnerList({ onSelect }: TestRunnerListProps) {
                   {onSelect && (
                     <Button variant="outline" size="sm" onClick={() => onSelect(t)}>Ver últimos logs</Button>
                   )}
-                  <Button size="sm" onClick={() => runTest(t.codigo)} disabled={!t.activo}>
+                  <Button size="sm" onClick={async () => {
+                    const res = await runTest(t.codigo);
+                    if (res && res.estado !== 'exito') {
+                      onFailure?.(t, res?.mensaje || 'Error desconocido');
+                    }
+                  }} disabled={!t.activo}>
                     <Rocket className="w-4 h-4 mr-2" /> Ejecutar
                   </Button>
                 </div>
