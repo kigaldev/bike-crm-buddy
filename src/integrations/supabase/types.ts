@@ -2155,6 +2155,14 @@ export type Database = {
         Args: { p_app_codigo: string; p_tipo_accion: string; p_metadata?: Json }
         Returns: string
       }
+      reparar_entorno_pruebas: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
+      reset_entorno_pruebas: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
       responder_feedback_admin: {
         Args: {
           p_feedback_id: string
@@ -2168,9 +2176,17 @@ export type Database = {
         Args: { p_empresa_id: string }
         Returns: boolean
       }
+      verificar_entorno_pruebas: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
       verificar_permiso_usuario: {
         Args: { p_recurso: string; p_accion: string }
         Returns: boolean
+      }
+      volver_estado_inicial: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
       }
     }
     Enums: {
